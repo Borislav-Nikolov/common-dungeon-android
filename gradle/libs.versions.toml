@@ -4,6 +4,7 @@ agp = "8.13.1"
 
 # Kotlin
 kotlin = "2.2.21"
+kotlinKspVersion = "2.3.3"
 jetbrainsKotlinJvm = "2.2.21"
 # Kotlin - Coroutines
 kotlinCoroutines = "1.10.2"
@@ -17,6 +18,9 @@ lifecycle = "2.10.0"
 
 # Material
 material = "1.13.0"
+
+# Hilt
+hiltVersion = "2.57.2"
 
 # Testing
 junit = "4.13.2"
@@ -44,6 +48,10 @@ androidx-viewmodel-compsoe = { group = "androidx.lifecycle", name = "lifecycle-v
 # Material
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+# Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion" }
+
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 # Testing - AndroidX
@@ -56,6 +64,10 @@ androidx-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test
 # Build
 android-application = { id = "com.android.application", version.ref = "agp" }
 
+# Hilt
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+
 # Kotlin
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKspVersion" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
