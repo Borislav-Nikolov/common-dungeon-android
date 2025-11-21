@@ -37,12 +37,23 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.foundation)
+
+    // TODO: check if these are needed. I've added them because I'm having trouble with finding material3.Text compose element and am trying different things
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.compose.material3)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     testImplementation(libs.junit)
