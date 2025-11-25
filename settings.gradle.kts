@@ -21,6 +21,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CommonDungeon"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":data")
 include(":ui")

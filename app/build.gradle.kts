@@ -3,13 +3,12 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.commondnd"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.commondnd"
@@ -43,17 +42,19 @@ android {
 }
 
 dependencies {
+
+
+    // TODO: review which are needed after finishing the build configurations
+    implementation(projects.data)
+    implementation(projects.domain)
+    implementation(projects.ui)
+
+
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.foundation)
-
-    // TODO: check if these are needed. I've added them because I'm having trouble with finding material3.Text compose element and am trying different things
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.compose.material3)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     testImplementation(libs.junit)

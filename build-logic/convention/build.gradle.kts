@@ -42,6 +42,13 @@ tasks {
 
 gradlePlugin {
     plugins {
-
+        register("androidLint") {
+            id = libs.plugins.commondnd.android.lint.get().pluginId
+            implementationClass = "AndroidLintConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = libs.plugins.commondnd.jvm.library.get().pluginId
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
     }
 }
