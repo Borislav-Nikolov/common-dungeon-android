@@ -1,19 +1,14 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.commondnd.android.application)
+    alias(libs.plugins.commondnd.android.application.compose)
+    alias(libs.plugins.commondnd.hilt)
 }
 
 android {
     namespace = "com.commondnd"
-    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.commondnd"
-        minSdk = 29
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -21,6 +16,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = "debug"
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -28,16 +26,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
     }
 }
 

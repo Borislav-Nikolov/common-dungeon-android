@@ -14,6 +14,9 @@ jetbrainsKotlinJvm = "2.2.21"
 # Kotlin - Coroutines
 kotlinCoroutines = "1.10.2"
 
+# Android
+androidDesugarJdkLibs = "2.1.5"
+
 # AndroidX
 activity = "1.12.0"
 appcompat = "1.7.1"
@@ -42,6 +45,9 @@ espressoCore = "3.7.0"
 # Kotlin - Coroutines
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinCoroutines" }
+
+# Android
+android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 
 # AndroidX
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
