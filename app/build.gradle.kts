@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = "debug"
+            applicationIdSuffix = ".debug"
         }
         release {
             isMinifyEnabled = false
@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.ui)
 
 
+    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.core.ktx)
