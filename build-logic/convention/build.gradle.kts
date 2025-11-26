@@ -42,6 +42,26 @@ tasks {
 
 gradlePlugin {
     plugins {
+        register("androidLibraryCompose") {
+            id = libs.plugins.commondnd.android.library.compose.get().pluginId
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = libs.plugins.commondnd.android.library.asProvider().get().pluginId
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidTest") {
+            id = libs.plugins.commondnd.android.test.get().pluginId
+            implementationClass = "AndroidTestConventionPlugin"
+        }
+        register("hilt") {
+            id = libs.plugins.commondnd.hilt.get().pluginId
+            implementationClass = "HiltConventionPlugin"
+        }
+        register("androidRoom") {
+            id = libs.plugins.commondnd.android.room.get().pluginId
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
         register("androidLint") {
             id = libs.plugins.commondnd.android.lint.get().pluginId
             implementationClass = "AndroidLintConventionPlugin"

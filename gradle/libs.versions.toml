@@ -65,6 +65,12 @@ material = { group = "com.google.android.material", name = "material", version.r
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion" }
+hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hiltVersion" }
+
+# Room
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -89,7 +95,9 @@ room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", vers
 [plugins]
 # Build
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+android-test = { id = "com.android.test", version.ref = "agp" }
 
 # Hilt
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
@@ -103,5 +111,10 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 # Plugins defined by this project
+commondnd-android-library = { id = "commondnd.android.library" }
+commondnd-android-library-compose = { id = "commondnd.android.library.compose" }
 commondnd-android-lint = { id = "commondnd.android.lint" }
+commondnd-android-room = { id = "commondnd.android.room" }
+commondnd-android-test = { id = "commondnd.android.test" }
+commondnd-hilt = { id = "commondnd.hilt" }
 commondnd-jvm-library = { id = "commondnd.jvm.library" }
