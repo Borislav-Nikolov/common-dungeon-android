@@ -45,7 +45,7 @@ fun CommonDungeonNavDisplay(
             registry.registry()
             entryProvider {
                 provider.get(currentGroup).forEach { (key, content) ->
-                    entry(key = key, content = { content(navController) })
+                    entry(key = key, content = { content(it, navController) })
                 }
             }
         }

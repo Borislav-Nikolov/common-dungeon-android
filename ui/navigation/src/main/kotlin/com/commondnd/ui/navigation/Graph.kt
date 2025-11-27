@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 interface NavGraphRegistry {
 
-    fun register(group: Any, key: Any, content: @Composable (NavController) -> Unit)
+    fun register(group: Any, key: Any, content: @Composable (Any, NavController) -> Unit)
 
     companion object {
 
@@ -14,7 +14,7 @@ interface NavGraphRegistry {
 
 internal interface NavGraphProvider {
 
-    fun get(group: Any): Map<Any, @Composable (NavController) -> Unit>
+    fun get(group: Any): Map<Any, @Composable (Any, NavController) -> Unit>
 
     companion object {
 
@@ -25,12 +25,12 @@ internal interface NavGraphProvider {
 private object DefaultNavGraphRegistry : NavGraphRegistry, NavGraphProvider {
 
     private val groupToEntries =
-        mutableMapOf<Any, MutableMap<Any, @Composable (NavController) -> Unit>>()
+        mutableMapOf<Any, MutableMap<Any, @Composable (Any, NavController) -> Unit>>()
 
     override fun register(
         group: Any,
         key: Any,
-        content: @Composable (NavController) -> Unit
+        content: @Composable (Any, NavController) -> Unit
     ) {
         if (group in groupToEntries && key !in groupToEntries[group]!!) {
             groupToEntries[group]!![key] = content
@@ -39,7 +39,7 @@ private object DefaultNavGraphRegistry : NavGraphRegistry, NavGraphProvider {
         }
     }
 
-    override fun get(group: Any): Map<Any, @Composable (NavController) -> Unit> {
+    override fun get(group: Any): Map<Any, @Composable (Any, NavController) -> Unit> {
         require(group in groupToEntries) { "Group $group has not been registered." }
         return groupToEntries[group]!!
     }

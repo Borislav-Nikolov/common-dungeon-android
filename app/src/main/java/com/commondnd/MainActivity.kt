@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                             register(
                                 group = "NavGraphGroup.NoUserGroup",
                                 key = "Initial",
-                                content = { navController ->
+                                content = { key, navController ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.SpaceBetween
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                             register(
                                 group = "NavGraphGroup.NoUserGroup",
                                 key = "Login",
-                                content = {
+                                content = { key, navController ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.SpaceBetween
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                             register(
                                 group = "NavGraphGroup.NoUserGroup",
                                 key = "About",
-                                content = {
+                                content = { key, navController ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.SpaceBetween
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                             register(
                                 group = "UserScope",
                                 key = "Home",
-                                content = { navController ->
+                                content = { key, navController ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.SpaceBetween
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                             register(
                                 group = "UserScope",
                                 key = "Characters",
-                                content = {
+                                content = { key, navController ->
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.SpaceBetween
