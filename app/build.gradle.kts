@@ -36,6 +36,7 @@ dependencies {
     implementation(projects.data)
     implementation(projects.domain)
     implementation(projects.ui.material3)
+    implementation(projects.ui.navigation)
 
 
     implementation(libs.androidx.compose.material3)

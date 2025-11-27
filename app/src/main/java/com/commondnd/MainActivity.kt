@@ -15,7 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.entryProvider
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
+import com.commondnd.ui.navigation.CommonDungeonNavDisplay
+import com.commondnd.ui.navigation.NavGraphGroup
+import com.commondnd.ui.navigation.NavGraphKey
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,15 +41,54 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize().systemBarsPadding()
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Hello World!")
-                        Button(onClick = {}) {
-                            Text("Click!")
+                    CommonDungeonNavDisplay(
+                        currentGroup = NavGraphGroup.NoUserGroup,
+                        startDestination = NavGraphKey.Initial,
+                        entryProvider = { group ->
+                            // TODO: remove the dependency to the navigation3 library from the app module
+                            entryProvider {
+                                when (group) {
+                                    NavGraphGroup.NoUserGroup -> {
+                                        entry<NavGraphKey.Initial> {
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text("Welcome to CommonDungeon")
+                                                Button(onClick = {
+                                                    navigate(NavGraphKey.Login)
+                                                }) {
+                                                    Text("Log in")
+                                                }
+                                                Button(onClick = {
+                                                    navigate(NavGraphKey.About)
+                                                }) {
+                                                    Text("About")
+                                                }
+                                            }
+                                        }
+                                        entry<NavGraphKey.Login> {
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text("This is the login page")
+                                            }
+                                        }
+                                        entry<NavGraphKey.About> {
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text("This describes what the app is about.")
+                                            }
+                                        }
+                                    }
+                                    NavGraphGroup.UserGroup -> TODO()
+                                }
+                            }
                         }
-                    }
+                    )
                 }
             }
         }
