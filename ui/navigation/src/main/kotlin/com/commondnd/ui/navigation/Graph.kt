@@ -1,60 +1,46 @@
 package com.commondnd.ui.navigation
 
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Composable
 
-sealed interface NavGraphGroup {
+interface NavGraphRegistry {
 
-    @Serializable
-    data object NoUserGroup : NavGraphGroup
+    fun register(group: Any, key: Any, content: @Composable (NavController) -> Unit)
 
-    @Serializable
-    data object UserGroup : NavGraphGroup
+    companion object {
+
+        operator fun invoke(): NavGraphRegistry = DefaultNavGraphRegistry
+    }
 }
 
-sealed interface NavGraphKey : NavKey {
+internal interface NavGraphProvider {
 
-    val group: NavGraphGroup
+    fun get(group: Any): Map<Any, @Composable (NavController) -> Unit>
 
-    @Serializable
-    data object Initial : NavGraphKey {
+    companion object {
 
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.NoUserGroup
+        operator fun invoke(): NavGraphProvider = DefaultNavGraphRegistry
+    }
+}
+
+private object DefaultNavGraphRegistry : NavGraphRegistry, NavGraphProvider {
+
+    private val groupToEntries =
+        mutableMapOf<Any, MutableMap<Any, @Composable (NavController) -> Unit>>()
+
+    override fun register(
+        group: Any,
+        key: Any,
+        content: @Composable (NavController) -> Unit
+    ) {
+        if (group in groupToEntries && key !in groupToEntries[group]!!) {
+            groupToEntries[group]!![key] = content
+        } else {
+            groupToEntries[group] = mutableMapOf(key to content)
+        }
     }
 
-    @Serializable
-    data object Login : NavGraphKey {
-
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.NoUserGroup
-    }
-
-    @Serializable
-    data object About : NavGraphKey {
-
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.NoUserGroup
-    }
-
-    @Serializable
-    data object Home : NavGraphKey {
-
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.UserGroup
-    }
-
-    @Serializable
-    data object Characters : NavGraphKey {
-
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.UserGroup
-    }
-
-    @Serializable
-    data object Inventory : NavGraphKey {
-
-        override val group: NavGraphGroup
-            get() = NavGraphGroup.UserGroup
+    override fun get(group: Any): Map<Any, @Composable (NavController) -> Unit> {
+        require(group in groupToEntries) { "Group $group has not been registered." }
+        return groupToEntries[group]!!
     }
 }

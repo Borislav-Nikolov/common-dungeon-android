@@ -1,35 +1,34 @@
 package com.commondnd.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 
 @Composable
 fun CommonDungeonNavDisplay(
-    currentGroup: NavGraphGroup,
-    startDestination: NavGraphKey,
-    entryProvider: NavigationScope.(NavGraphGroup) -> (NavKey) -> NavEntry<NavKey>
+    currentGroup: Any,
+    startDestination: Any,
+    registry: NavGraphRegistry.() -> Unit
 ) {
-
-    val backStack = rememberNavBackStack(startDestination)
-    val navigationScope = remember(backStack) {
-        object : NavigationScope {
-            override fun navigate(destination: NavGraphKey): Boolean {
+    val registry = remember { NavGraphRegistry() }
+    val provider = remember { NavGraphProvider() }
+    // TODO: save state in a better way; not using rememberNavBackStack because it requires a specific type (NavKey)
+    val backStack = rememberSaveable(currentGroup, startDestination) { mutableStateListOf(startDestination) }
+    val navController = remember(backStack) {
+        object : NavController {
+            override fun navigate(destination: Any): Boolean {
                 return backStack.add(destination)
             }
 
-            override fun navigateBack(): NavGraphKey? {
-                return backStack.removeLastOrNull() as NavGraphKey?
+            override fun navigateBack(): Any? {
+                return backStack.removeLastOrNull() as Any?
             }
         }
-    }
-    val entryProvider = remember(currentGroup, navigationScope) {
-        navigationScope.entryProvider(currentGroup)
     }
     NavDisplay(
         entryDecorators = listOf(
@@ -39,16 +38,23 @@ fun CommonDungeonNavDisplay(
             rememberViewModelStoreNavEntryDecorator()
         ),
         onBack = {
-            navigationScope.navigateBack()
+            navController.navigateBack()
         },
         backStack = backStack,
-        entryProvider = entryProvider
+        entryProvider = remember(currentGroup, provider, navController) {
+            registry.registry()
+            entryProvider {
+                provider.get(currentGroup).forEach { (key, content) ->
+                    entry(key = key, content = { content(navController) })
+                }
+            }
+        }
     )
 }
 
-interface NavigationScope {
+interface NavController {
 
-    fun navigate(destination: NavGraphKey): Boolean
+    fun navigate(destination: Any): Boolean
 
-    fun navigateBack(): NavGraphKey?
+    fun navigateBack(): Any?
 }

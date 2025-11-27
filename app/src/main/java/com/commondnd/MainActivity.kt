@@ -13,13 +13,14 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation3.runtime.entryProvider
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
-import com.commondnd.ui.navigation.NavGraphGroup
-import com.commondnd.ui.navigation.NavGraphKey
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,52 +42,91 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize().systemBarsPadding()
                 ) {
+                    var currentGroup by rememberSaveable { mutableStateOf("NavGraphGroup.NoUserGroup") }
                     CommonDungeonNavDisplay(
-                        currentGroup = NavGraphGroup.NoUserGroup,
-                        startDestination = NavGraphKey.Initial,
-                        entryProvider = { group ->
-                            // TODO: remove the dependency to the navigation3 library from the app module
-                            entryProvider {
-                                when (group) {
-                                    NavGraphGroup.NoUserGroup -> {
-                                        entry<NavGraphKey.Initial> {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("Welcome to CommonDungeon")
-                                                Button(onClick = {
-                                                    navigate(NavGraphKey.Login)
-                                                }) {
-                                                    Text("Log in")
-                                                }
-                                                Button(onClick = {
-                                                    navigate(NavGraphKey.About)
-                                                }) {
-                                                    Text("About")
-                                                }
-                                            }
+                        currentGroup = currentGroup,
+                        startDestination = if (currentGroup == "NavGraphGroup.NoUserGroup") "Initial" else "Home",
+                        registry = {
+                            register(
+                                group = "NavGraphGroup.NoUserGroup",
+                                key = "Initial",
+                                content = { navController ->
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Welcome to CommonDungeon")
+                                        Button(onClick = {
+                                            navController.navigate("Login")
+                                        }) {
+                                            Text("Log in")
                                         }
-                                        entry<NavGraphKey.Login> {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("This is the login page")
-                                            }
-                                        }
-                                        entry<NavGraphKey.About> {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("This describes what the app is about.")
-                                            }
+                                        Button(onClick = {
+                                            navController.navigate("About")
+                                        }) {
+                                            Text("About")
                                         }
                                     }
-                                    NavGraphGroup.UserGroup -> TODO()
                                 }
-                            }
+                            )
+                            register(
+                                group = "NavGraphGroup.NoUserGroup",
+                                key = "Login",
+                                content = {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("This is the login page")
+                                        Button(onClick = {
+                                            currentGroup = "UserScope"
+                                        }) {
+                                            Text("Log in")
+                                        }
+                                    }
+                                }
+                            )
+                            register(
+                                group = "NavGraphGroup.NoUserGroup",
+                                key = "About",
+                                content = {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("This describes what the app is about.")
+                                    }
+                                }
+                            )
+                            register(
+                                group = "UserScope",
+                                key = "Home",
+                                content = { navController ->
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("This is the HOME page")
+                                        Button(onClick = {
+                                            navController.navigate("Characters")
+                                        }) {
+                                            Text("Characters")
+                                        }
+                                    }
+                                }
+                            )
+                            register(
+                                group = "UserScope",
+                                key = "Characters",
+                                content = {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("This is the CHARACTERS page")
+                                    }
+                                }
+                            )
                         }
                     )
                 }
