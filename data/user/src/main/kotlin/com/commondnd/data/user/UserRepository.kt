@@ -1,13 +1,14 @@
 package com.commondnd.data.user
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 interface UserRepository {
 
-    fun getUser(): User
-    fun monitorUser(): Flow<User>
+    fun getUser(): User?
+    fun monitorUser(): Flow<User?>
     fun login(token: String)
     fun logout()
 }
@@ -17,24 +18,27 @@ internal class UserRepositoryImpl @Inject constructor(
     private val localSource: UserLocalDataSource,
     private val tokenStorage: TokenStorage
 ) : UserRepository {
-    override fun getUser(): User {
+
+    private val mockCachedUser: MutableStateFlow<User?> = MutableStateFlow(null)
+
+    override fun getUser(): User? {
         // TODO
-        return User("-1", "asd", "ASD", "123asdASD")
+        return mockCachedUser.value
     }
 
-    override fun monitorUser(): Flow<User> {
+    override fun monitorUser(): Flow<User?> {
         // TODO
-        return flow {
-            emit(User("-1", "asd", "ASD", "123asdASD"))
-        }
+        return mockCachedUser
     }
 
     override fun login(token: String) {
         // TODO
+        mockCachedUser.update { User("1234", "MockUser", "mockuser1234", "123asdASD") }
     }
 
     override fun logout() {
         // TODO
+        mockCachedUser.update { null }
     }
 
 }

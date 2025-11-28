@@ -2,9 +2,11 @@ package com.commondnd
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,8 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +52,11 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize().systemBarsPadding()
                 ) {
-                    var currentGroup by rememberSaveable { mutableStateOf(CommonNavigationGroup.NoUser) }
+                    val user by mainViewModel.user.collectAsState(null)
+                    var currentGroup: Any by rememberSaveable { mutableStateOf(CommonNavigationGroup.NoUser) }
+                    LaunchedEffect(user) {
+                        currentGroup = if (user == null) CommonNavigationGroup.NoUser else "UserScope"
+                    }
                     CommonDungeonNavDisplay(
                         currentGroup = currentGroup,
                         startDestination = if (currentGroup == CommonNavigationGroup.NoUser) "Initial" else "Home",

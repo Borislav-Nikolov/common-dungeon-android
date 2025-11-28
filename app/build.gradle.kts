@@ -32,6 +32,7 @@ android {
 dependencies {
 
     implementation(projects.domain)
+    implementation(projects.data.user)
     implementation(projects.ui.material3)
     implementation(projects.ui.navigation)
     implementation(projects.ui.initial)
