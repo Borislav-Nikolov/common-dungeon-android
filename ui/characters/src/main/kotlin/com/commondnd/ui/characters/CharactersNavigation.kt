@@ -14,7 +14,7 @@ fun NavGraphRegistry.registerCharactersScreens() {
         group = CommonNavigationGroup.UserScoped.Characters,
         key = CharactersScreen.Characters,
         content = { key, navController ->
-            CharactersScreen { navController.navigate(CharactersScreen.Characters) }
+            CharactersScreen { navController.navigate(CharactersScreen.Details) }
         }
     )
     register(

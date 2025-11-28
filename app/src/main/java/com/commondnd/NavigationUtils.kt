@@ -21,8 +21,8 @@ internal fun iconMap(group: CommonNavigationGroup.UserScoped): ImageVector =
 @Composable
 internal fun labelMap(group: CommonNavigationGroup.UserScoped): String =
     when(group) {
-        CommonNavigationGroup.UserScoped.Home -> "stringResource(R.string.label_home)"
-        CommonNavigationGroup.UserScoped.Characters -> "Characters"
-        CommonNavigationGroup.UserScoped.Inventory -> "Inventory"
-        CommonNavigationGroup.UserScoped.More -> "More"
+        CommonNavigationGroup.UserScoped.Home -> stringResource(com.commondnd.ui.home.R.string.label_home)
+        CommonNavigationGroup.UserScoped.Characters -> stringResource(com.commondnd.ui.characters.R.string.label_characters)
+        CommonNavigationGroup.UserScoped.Inventory -> stringResource(com.commondnd.ui.inventory.R.string.label_inventory)
+        CommonNavigationGroup.UserScoped.More -> stringResource(com.commondnd.ui.more.R.string.label_more)
     }
