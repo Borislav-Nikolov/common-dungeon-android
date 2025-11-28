@@ -10,11 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DirectionsCar
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.PeopleOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -24,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.commondnd.ui.characters.registerCharactersScreens
 import com.commondnd.ui.home.registerHomeScreens
 import com.commondnd.ui.initial.registerInitialScreens
@@ -32,7 +26,6 @@ import com.commondnd.ui.inventory.registerInventoryScreens
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.more.registerMoreScreens
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
-import com.commondnd.ui.navigation.CommonNavigationGroup
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier.fillMaxSize().padding(contentPadding)
                         ) {
                             CommonDungeonNavDisplay(
-                                backStackController = mainViewModel,
+                                groupedNavController = mainViewModel,
                                 registry = {
                                     registerInitialScreens()
                                     registerHomeScreens()

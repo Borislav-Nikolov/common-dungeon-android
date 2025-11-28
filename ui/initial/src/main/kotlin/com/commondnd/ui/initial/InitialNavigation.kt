@@ -32,10 +32,10 @@ fun NavGraphRegistry.registerInitialScreens() {
         content = { key, navController ->
             InitialScreen(
                 onLoginClick = {
-                    navController.navigate(LoginScreen.Login)
+                    navController.push(LoginScreen.Login)
                 },
                 onAboutClick = {
-                    navController.navigate(InitialScreen.About)
+                    navController.push(InitialScreen.About)
                 }
             )
         }

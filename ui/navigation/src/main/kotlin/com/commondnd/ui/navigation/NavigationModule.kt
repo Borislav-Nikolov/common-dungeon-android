@@ -13,6 +13,6 @@ internal abstract class NavigationModule {
     @Binds
     @Singleton
     abstract fun bindsBackStackManager(
-        backStackManagerImpl: DefaultBackStackController
-    ): BackStackController
+        backStackManagerImpl: DefaultGroupedNavController
+    ): GroupedNavController
 }

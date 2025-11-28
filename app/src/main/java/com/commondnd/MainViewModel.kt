@@ -9,7 +9,7 @@ import com.commondnd.ui.home.HomeScreen
 import com.commondnd.ui.initial.InitialScreen
 import com.commondnd.ui.inventory.InventoryScreen
 import com.commondnd.ui.more.MoreScreen
-import com.commondnd.ui.navigation.BackStackController
+import com.commondnd.ui.navigation.GroupedNavController
 import com.commondnd.ui.navigation.CommonNavigationGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    val backStackManger: BackStackController
-) : ViewModel(), BackStackController by backStackManger {
+    val navController: GroupedNavController
+) : ViewModel(), GroupedNavController by navController {
 
     init {
         push(CommonNavigationGroup.Blank, CommonNavigationGroup.Blank.groupInitialScreen)
@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
         if (group !in this) {
             push(group, group.groupInitialScreen)
         }
-        backStackManger.makeCurrent(group)
+        navController.makeCurrent(group)
     }
 
     val user: Flow<User?>
