@@ -31,13 +31,10 @@ android {
 
 dependencies {
 
-
-    // TODO: review which are needed after finishing the build configurations
-    implementation(projects.data)
     implementation(projects.domain)
     implementation(projects.ui.material3)
     implementation(projects.ui.navigation)
-
+    implementation(projects.ui.initial)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.activity.compose)

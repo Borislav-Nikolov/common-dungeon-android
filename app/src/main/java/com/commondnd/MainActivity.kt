@@ -19,9 +19,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.commondnd.ui.initial.registerInitialScreens
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
+import com.commondnd.ui.navigation.CommonNavigationGroup
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,62 +46,12 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize().systemBarsPadding()
                 ) {
-                    var currentGroup by rememberSaveable { mutableStateOf("NavGraphGroup.NoUserGroup") }
+                    var currentGroup by rememberSaveable { mutableStateOf(CommonNavigationGroup.NoUser) }
                     CommonDungeonNavDisplay(
                         currentGroup = currentGroup,
-                        startDestination = if (currentGroup == "NavGraphGroup.NoUserGroup") "Initial" else "Home",
+                        startDestination = if (currentGroup == CommonNavigationGroup.NoUser) "Initial" else "Home",
                         registry = {
-                            register(
-                                group = "NavGraphGroup.NoUserGroup",
-                                key = "Initial",
-                                content = { key, navController ->
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text("Welcome to CommonDungeon")
-                                        Button(onClick = {
-                                            navController.navigate("Login")
-                                        }) {
-                                            Text("Log in")
-                                        }
-                                        Button(onClick = {
-                                            navController.navigate("About")
-                                        }) {
-                                            Text("About")
-                                        }
-                                    }
-                                }
-                            )
-                            register(
-                                group = "NavGraphGroup.NoUserGroup",
-                                key = "Login",
-                                content = { key, navController ->
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text("This is the login page")
-                                        Button(onClick = {
-                                            currentGroup = "UserScope"
-                                        }) {
-                                            Text("Log in")
-                                        }
-                                    }
-                                }
-                            )
-                            register(
-                                group = "NavGraphGroup.NoUserGroup",
-                                key = "About",
-                                content = { key, navController ->
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text("This describes what the app is about.")
-                                    }
-                                }
-                            )
+                            registerInitialScreens()
                             register(
                                 group = "UserScope",
                                 key = "Home",
