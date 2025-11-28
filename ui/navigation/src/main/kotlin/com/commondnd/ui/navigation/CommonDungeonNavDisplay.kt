@@ -1,7 +1,8 @@
 package com.commondnd.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -9,66 +10,66 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 
-/**
- * A composable navigation display that manages navigation state and navigation transitions
- * for a group of destinations.
- *
- * This component sets up a navigation system with automatic state saving, view model management,
- * and back stack handling. It uses the Navigation3 library's [NavDisplay] internally with
- * configured entry decorators for state preservation and lifecycle management.
- *
- * @param currentGroup The navigation group identifier. Destinations are organized by groups,
- * and only destinations belonging to this group will be available for navigation.
- * @param startDestination The initial destination to display when the nav display is first created.
- * This destination must be registered in the provided registry for the current group.
- * @param registry A lambda that configures the [NavGraphRegistry] by registering navigation
- * destinations for various groups. Use [NavGraphRegistry.register] to associate destinations
- * with their composable content.
- */
 @Composable
 fun CommonDungeonNavDisplay(
-    currentGroup: Any,
-    startDestination: Any,
-    // TODO: use the BackStackManager to manage sub-navigations for the navigation tabs and the nouser/user scopes
-    backStackManager: BackStackManager? = null,
+    backStackController: BackStackController,
     registry: NavGraphRegistry.() -> Unit
 ) {
-    val registry = remember { NavGraphRegistry() }
-    val provider = remember { NavGraphProvider() }
+    val currentGroup by backStackController.currentGroup.collectAsState(null)
+    if (currentGroup != null) {
+        val registry = rememberNavRegistry()
+        val provider = rememberNavProvider()
+        val backStack = rememberBackStack(currentGroup!!, backStackController)
+        val navController = rememberNavController(backStackController)
+        NavDisplay(
+            entryDecorators = listOf(
+                // Add the default decorators for managing scenes and saving state
+                rememberSaveableStateHolderNavEntryDecorator(),
+                // Then add the view model store decorator
+                rememberViewModelStoreNavEntryDecorator()
+            ),
+            onBack = {
+                navController.navigateBack()
+            },
+            backStack = backStack,
+            entryProvider = remember(currentGroup, provider, navController) {
+                registry.registry()
+                entryProvider {
+                    provider.get(currentGroup!!).forEach { (key, content) ->
+                        entry(key = key, content = { content(it, navController) })
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun rememberNavProvider(): NavGraphProvider = remember { NavGraphProvider() }
+
+@Composable
+private fun rememberNavRegistry(): NavGraphRegistry = remember { NavGraphRegistry() }
+
+@Composable
+private fun rememberBackStack(
+    currentGroup: Any,
+    backStackController: BackStackController
     // TODO: save state in a better way; not using rememberNavBackStack because it requires a specific type (NavKey)
-    val backStack = rememberSaveable(currentGroup, startDestination) { mutableStateListOf(startDestination) }
-    val navController = remember(backStack) {
+) = rememberSaveable(currentGroup, backStackController) { backStackController[currentGroup] }
+
+@Composable
+private fun rememberNavController(backStackController: BackStackController) =
+    remember(backStackController) {
         object : NavController {
             override fun navigate(destination: Any): Boolean {
-                return backStack.add(destination)
+                return backStackController.push(destination)
             }
 
             override fun navigateBack(): Any? {
-                return backStack.removeLastOrNull() as Any?
+                return backStackController.pop()
             }
         }
     }
-    NavDisplay(
-        entryDecorators = listOf(
-            // Add the default decorators for managing scenes and saving state
-            rememberSaveableStateHolderNavEntryDecorator(),
-            // Then add the view model store decorator
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        onBack = {
-            navController.navigateBack()
-        },
-        backStack = backStack,
-        entryProvider = remember(currentGroup, provider, navController) {
-            registry.registry()
-            entryProvider {
-                provider.get(currentGroup).forEach { (key, content) ->
-                    entry(key = key, content = { content(it, navController) })
-                }
-            }
-        }
-    )
-}
 
 /**
  * Navigation controller interface for managing navigation actions within the navigation system.

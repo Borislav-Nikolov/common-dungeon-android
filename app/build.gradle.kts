@@ -36,6 +36,11 @@ dependencies {
     implementation(projects.ui.material3)
     implementation(projects.ui.navigation)
     implementation(projects.ui.initial)
+    implementation(projects.ui.login)
+    implementation(projects.ui.home)
+    implementation(projects.ui.characters)
+    implementation(projects.ui.inventory)
+    implementation(projects.ui.more)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.icons)

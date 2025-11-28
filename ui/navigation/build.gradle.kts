@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.commondnd.android.library)
     alias(libs.plugins.commondnd.android.library.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.commondnd.hilt)
 }
 
 android {
