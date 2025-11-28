@@ -29,6 +29,8 @@ import androidx.navigation3.ui.NavDisplay
 fun CommonDungeonNavDisplay(
     currentGroup: Any,
     startDestination: Any,
+    // TODO: use the BackStackManager to manage sub-navigations for the navigation tabs and the nouser/user scopes
+    backStackManager: BackStackManager? = null,
     registry: NavGraphRegistry.() -> Unit
 ) {
     val registry = remember { NavGraphRegistry() }

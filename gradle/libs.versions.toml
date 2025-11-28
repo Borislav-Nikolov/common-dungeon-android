@@ -67,6 +67,7 @@ androidx-compose-material = { group = "androidx.compose.material", name = "mater
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive" }
 androidx-compose-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
+androidx-compose-material3-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-uiTooling = { group = "androidx.compose.ui", name = "ui-tooling" }

@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.ui.initial)
 
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.icons)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
