@@ -1,4 +1,4 @@
-package com.commondnd.ui.navigation
+package com.commondnd
 
 sealed interface CommonNavigationGroup {
 

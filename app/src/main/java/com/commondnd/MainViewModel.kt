@@ -10,7 +10,6 @@ import com.commondnd.ui.initial.InitialScreen
 import com.commondnd.ui.inventory.InventoryScreen
 import com.commondnd.ui.more.MoreScreen
 import com.commondnd.ui.navigation.GroupedNavController
-import com.commondnd.ui.navigation.CommonNavigationGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest

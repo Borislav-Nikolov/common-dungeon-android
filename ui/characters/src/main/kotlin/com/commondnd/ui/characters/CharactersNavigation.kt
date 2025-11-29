@@ -1,6 +1,5 @@
 package com.commondnd.ui.characters
 
-import com.commondnd.ui.navigation.CommonNavigationGroup
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object CharactersScreen {

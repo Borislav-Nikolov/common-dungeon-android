@@ -8,7 +8,6 @@ import androidx.compose.material.icons.rounded.PeopleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import com.commondnd.ui.navigation.CommonNavigationGroup
 
 internal fun iconMap(group: CommonNavigationGroup.UserScoped): ImageVector =
     when(group) {

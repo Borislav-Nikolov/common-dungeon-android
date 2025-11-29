@@ -1,6 +1,5 @@
 package com.commondnd.ui.home
 
-import com.commondnd.ui.navigation.CommonNavigationGroup
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object HomeScreen {

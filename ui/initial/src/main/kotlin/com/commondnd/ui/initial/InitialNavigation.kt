@@ -5,7 +5,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.commondnd.ui.login.LoginScreen
 import com.commondnd.ui.login.registerLoginScreens
-import com.commondnd.ui.navigation.CommonNavigationGroup
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object InitialScreen {
