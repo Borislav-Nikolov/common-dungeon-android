@@ -9,7 +9,7 @@ interface UserRepository {
 
     fun getUser(): User?
     fun monitorUser(): Flow<User?>
-    fun login(token: String)
+    suspend fun login(code: String, codeVerifier: String)
     fun logout()
 }
 
@@ -31,7 +31,7 @@ internal class UserRepositoryImpl @Inject constructor(
         return mockCachedUser
     }
 
-    override fun login(token: String) {
+    override suspend fun login(code: String, codeVerifier: String) {
         // TODO
         mockCachedUser.update { User("1234", "MockUser", "mockuser1234", "123asdASD") }
     }

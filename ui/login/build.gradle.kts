@@ -10,8 +10,9 @@ android {
 
 dependencies {
 
+    implementation(projects.data.core)
     implementation(projects.data.user)
-    implementation(projects.data.authorization)
+    implementation(projects.data.authorizationAndroid)
     implementation(projects.ui.navigation)
 
     implementation(libs.androidx.compose.material3)

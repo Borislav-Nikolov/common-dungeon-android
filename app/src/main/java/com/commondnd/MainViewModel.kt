@@ -8,6 +8,7 @@ import com.commondnd.ui.characters.CharactersScreen
 import com.commondnd.ui.home.HomeScreen
 import com.commondnd.ui.initial.InitialScreen
 import com.commondnd.ui.inventory.InventoryScreen
+import com.commondnd.ui.login.LoginController
 import com.commondnd.ui.more.MoreScreen
 import com.commondnd.ui.navigation.GroupedNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    val navController: GroupedNavController
-) : ViewModel(), GroupedNavController by navController {
+    private val navController: GroupedNavController,
+    private val loginController: LoginController
+) : ViewModel(), GroupedNavController by navController, LoginController by loginController {
 
     init {
         push(CommonNavigationGroup.Blank, CommonNavigationGroup.Blank.groupInitialScreen)
@@ -37,13 +39,6 @@ class MainViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    override fun makeCurrent(group: Any, removeOthers: Boolean) {
-        if (group !in this) {
-            push(group, group.groupInitialScreen)
-        }
-        navController.makeCurrent(group, removeOthers)
     }
 
     val user: Flow<User?>
@@ -69,4 +64,11 @@ class MainViewModel @Inject constructor(
 
             else -> IllegalStateException("Unhandled group $this")
         }
+
+    override fun makeCurrent(group: Any, removeOthers: Boolean) {
+        if (group !in this) {
+            push(group, group.groupInitialScreen)
+        }
+        navController.makeCurrent(group, removeOthers)
+    }
 }

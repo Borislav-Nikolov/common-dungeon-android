@@ -32,6 +32,7 @@ android {
 dependencies {
 
     implementation(projects.domain)
+    implementation(projects.data.core)
     implementation(projects.data.user)
     implementation(projects.ui.material3)
     implementation(projects.ui.navigation)
@@ -49,4 +50,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.browser)
 }

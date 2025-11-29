@@ -9,6 +9,7 @@ android {
 
 dependencies {
 
+    implementation(projects.data.core)
     implementation(projects.data.user)
     implementation(projects.ui.navigation)
     implementation(projects.ui.login)
