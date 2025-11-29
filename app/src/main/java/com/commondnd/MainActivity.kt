@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -51,10 +52,14 @@ class MainActivity : AppCompatActivity() {
                 val user by mainViewModel.user.collectAsState(null)
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
-                    modifier = Modifier.fillMaxSize().systemBarsPadding(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding(),
                     content = { contentPadding ->
                         Surface(
-                            modifier = Modifier.fillMaxSize().padding(contentPadding)
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
                         ) {
                             CommonDungeonNavDisplay(
                                 groupedNavController = mainViewModel,
@@ -69,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     },
                     bottomBar = {
-                        if (user != null) {
+                        AnimatedVisibility(user != null) {
                             NavigationBar {
                                 mainViewModel.navigationTabs.forEach {
                                     NavigationBarItem(

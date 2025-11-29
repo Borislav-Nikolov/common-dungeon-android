@@ -14,9 +14,8 @@ fun CommonDungeonNavDisplay(
     groupedNavController: GroupedNavController,
     registry: NavGraphRegistry.() -> Unit
 ) {
-    val currentGroup by groupedNavController.currentGroup.collectAsState(null)
     val backStack by groupedNavController.currentBackStack.collectAsState(null)
-    if (currentGroup != null && backStack != null) {
+    if (backStack != null) {
         val registry = rememberNavRegistry()
         val provider = rememberNavProvider()
         NavDisplay(

@@ -1,6 +1,6 @@
 package com.commondnd.ui.more
 
-import com.commondnd.ui.navigation.CommonNavigationGroup
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object MoreScreen {
@@ -12,7 +12,8 @@ fun NavGraphRegistry.registerMoreScreens() {
     register(
         key = MoreScreen.More,
         content = { key, navController ->
-            MoreScreen()
+            val viewModel: MoreViewModel = hiltViewModel()
+            MoreScreen(onLogout = { viewModel.logout() })
         }
     )
 }
