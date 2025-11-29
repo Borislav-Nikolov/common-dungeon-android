@@ -17,7 +17,6 @@ object InitialScreen {
 
 fun NavGraphRegistry.registerInitialScreens() {
     register(
-        group = CommonNavigationGroup.Blank,
         key = InitialScreen.Splash,
         content = { key, navController ->
             // TODO:
@@ -27,7 +26,6 @@ fun NavGraphRegistry.registerInitialScreens() {
         }
     )
     register(
-        group = CommonNavigationGroup.NoUser,
         key = InitialScreen.Initial,
         content = { key, navController ->
             InitialScreen(
@@ -41,7 +39,6 @@ fun NavGraphRegistry.registerInitialScreens() {
         }
     )
     register(
-        group = CommonNavigationGroup.NoUser,
         key = InitialScreen.About,
         content = { key, navController ->
             AboutScreen()

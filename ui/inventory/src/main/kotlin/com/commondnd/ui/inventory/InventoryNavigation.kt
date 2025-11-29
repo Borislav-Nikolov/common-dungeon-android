@@ -10,7 +10,6 @@ object InventoryScreen {
 
 fun NavGraphRegistry.registerInventoryScreens() {
     register(
-        group = CommonNavigationGroup.UserScoped.Inventory,
         key = InventoryScreen.Inventory,
         content = { key, navController ->
             InventoryScreen()

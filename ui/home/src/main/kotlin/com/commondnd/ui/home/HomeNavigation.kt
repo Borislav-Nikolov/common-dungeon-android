@@ -11,7 +11,6 @@ object HomeScreen {
 fun NavGraphRegistry.registerHomeScreens() {
 
     register(
-        group = CommonNavigationGroup.UserScoped.Home,
         key = HomeScreen.Home,
         content = { key, navController ->
             HomeScreen()

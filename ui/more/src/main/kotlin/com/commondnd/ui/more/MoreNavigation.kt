@@ -10,7 +10,6 @@ object MoreScreen {
 
 fun NavGraphRegistry.registerMoreScreens() {
     register(
-        group = CommonNavigationGroup.UserScoped.More,
         key = MoreScreen.More,
         content = { key, navController ->
             MoreScreen()

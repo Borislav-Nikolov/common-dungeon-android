@@ -7,6 +7,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+interface NavController {
+
+    fun push(entry: Any): Boolean
+
+    fun pop(): Any?
+}
+
 interface GroupedNavController : NavController {
 
     val currentGroup: Flow<Any?>
@@ -14,7 +21,7 @@ interface GroupedNavController : NavController {
     operator fun contains(group: Any): Boolean
     fun push(group: Any, entry: Any): Boolean
     fun remove(group: Any)
-    fun makeCurrent(group: Any)
+    fun makeCurrent(group: Any, removeOthers: Boolean = false)
 }
 
 internal class DefaultGroupedNavController @Inject constructor() : GroupedNavController {
@@ -51,16 +58,13 @@ internal class DefaultGroupedNavController @Inject constructor() : GroupedNavCon
         return backStacks[_currentGroup.value]?.removeLastOrNull()
     }
 
-    override fun makeCurrent(group: Any) {
+    override fun makeCurrent(group: Any, removeOthers: Boolean) {
         require(group in backStacks) { "Group $group doesn't exits." }
-        require(_currentGroup.value != group) { "Current group and make current request group are the same: $group" }
         _currentGroup.update { group }
+        if (removeOthers) {
+            val currentBackStack = backStacks[group]
+            backStacks.clear()
+            backStacks[group] = currentBackStack!!
+        }
     }
-}
-
-interface NavController {
-
-    fun push(entry: Any): Boolean
-
-    fun pop(): Any?
 }

@@ -13,7 +13,6 @@ object LoginScreen {
 
 fun NavGraphRegistry.registerLoginScreens() {
     register(
-        group = CommonNavigationGroup.NoUser,
         key = LoginScreen.Login,
         content = { key, navController ->
             val loginViewModel: LoginViewModel = hiltViewModel()

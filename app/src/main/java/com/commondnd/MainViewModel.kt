@@ -33,17 +33,18 @@ class MainViewModel @Inject constructor(
                         CommonNavigationGroup.UserScoped.Home
                     } else {
                         CommonNavigationGroup.NoUser
-                    }
+                    },
+                    removeOthers = true
                 )
             }
         }
     }
 
-    override fun makeCurrent(group: Any) {
+    override fun makeCurrent(group: Any, removeOthers: Boolean) {
         if (group !in this) {
             push(group, group.groupInitialScreen)
         }
-        navController.makeCurrent(group)
+        navController.makeCurrent(group, removeOthers)
     }
 
     val user: Flow<User?>

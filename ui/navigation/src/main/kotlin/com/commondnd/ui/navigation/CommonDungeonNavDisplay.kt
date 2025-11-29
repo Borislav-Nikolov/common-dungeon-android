@@ -30,10 +30,10 @@ fun CommonDungeonNavDisplay(
                 groupedNavController.pop()
             },
             backStack = backStack!!,
-            entryProvider = remember(currentGroup, registry, provider) {
+            entryProvider = remember(groupedNavController, registry, provider) {
                 registry.registry()
                 entryProvider {
-                    provider.get(currentGroup!!).forEach { (key, content) ->
+                    provider.get().forEach { (key, content) ->
                         entry(key = key, content = { content(it, groupedNavController) })
                     }
                 }

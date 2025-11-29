@@ -11,14 +11,12 @@ object CharactersScreen {
 
 fun NavGraphRegistry.registerCharactersScreens() {
     register(
-        group = CommonNavigationGroup.UserScoped.Characters,
         key = CharactersScreen.Characters,
         content = { key, navController ->
             CharactersScreen { navController.push(CharactersScreen.Details) }
         }
     )
     register(
-        group = CommonNavigationGroup.UserScoped.Characters,
         key = CharactersScreen.Details,
         content = { key, navController ->
             DetailsScreen()
