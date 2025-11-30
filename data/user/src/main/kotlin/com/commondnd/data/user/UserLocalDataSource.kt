@@ -7,6 +7,8 @@ internal interface UserLocalDataSource {
     fun get(): User?
 
     fun store(user: User)
+
+    fun clear()
 }
 
 internal class UserLocalDataSourceImpl @Inject constructor() : UserLocalDataSource {
@@ -19,5 +21,9 @@ internal class UserLocalDataSourceImpl @Inject constructor() : UserLocalDataSour
 
     override fun store(user: User) {
         mockStorage = user
+    }
+
+    override fun clear() {
+        mockStorage = null
     }
 }

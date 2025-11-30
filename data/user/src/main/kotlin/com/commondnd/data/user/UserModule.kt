@@ -1,11 +1,17 @@
 package com.commondnd.data.user
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -45,12 +51,21 @@ internal abstract class UserModule {
         @IntoSet
         fun providesUserAuthTokenInterceptor(
             tokenStorage: TokenStorage
-        ): Interceptor = UserAuthTokenInterceptor(tokenProvider = tokenStorage::get)
+        ): Interceptor = UserAuthTokenInterceptor(
+            tokenProvider = { runBlocking {  tokenStorage.get() } }
+        )
 
         @Provides
         @Singleton
         fun providesUserService(
             retrofit: Retrofit
         ): UserService = retrofit.create(UserService::class.java)
+
+        @Provides
+        @Singleton
+        @AuthToken
+        fun providesAuthTokenDataStorePreferences(
+            @ApplicationContext context: Context
+        ): DataStore<Preferences> = context.tokenDataStore
     }
 }
