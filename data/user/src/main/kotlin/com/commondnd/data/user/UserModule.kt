@@ -67,5 +67,12 @@ internal abstract class UserModule {
         fun providesAuthTokenDataStorePreferences(
             @ApplicationContext context: Context
         ): DataStore<Preferences> = context.tokenDataStore
+
+        @Provides
+        @Singleton
+        @UserStore
+        fun providesUserDataStorePreferences(
+            @ApplicationContext context: Context
+        ): DataStore<Preferences> = context.userDataStore
     }
 }

@@ -30,8 +30,9 @@ internal class TokenStorageImpl @Inject constructor(
 ) : TokenStorage {
 
     private companion object {
+
         val TOKEN_KEY = stringPreferencesKey("encrypted_token")
-        val TOKEN_KEY_ALIAS = "secured_user_token"
+        const val TOKEN_KEY_ALIAS = "secured_user_token"
     }
 
 
