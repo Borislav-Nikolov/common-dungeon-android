@@ -9,14 +9,14 @@ interface UserRepository {
 
     fun getUser(): User?
     fun monitorUser(): Flow<User?>
-    suspend fun login(code: String, codeVerifier: String)
+    suspend fun login(userAuthData: UserAuthData)
     fun logout()
 }
 
 internal class UserRepositoryImpl @Inject constructor(
     private val remoteSource: AuthRemoteDataSource,
     private val localSource: UserLocalDataSource,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
 ) : UserRepository {
 
     private val mockCachedUser: MutableStateFlow<User?> = MutableStateFlow(null)
@@ -31,9 +31,10 @@ internal class UserRepositoryImpl @Inject constructor(
         return mockCachedUser
     }
 
-    override suspend fun login(code: String, codeVerifier: String) {
-        // TODO
-        mockCachedUser.update { User("1234", "MockUser", "mockuser1234", "123asdASD") }
+    override suspend fun login(userAuthData: UserAuthData) {
+        tokenStorage.store(remoteSource.getToken(userAuthData))
+        localSource.store(remoteSource.getUser())
+        mockCachedUser.update { localSource.get() }
     }
 
     override fun logout() {

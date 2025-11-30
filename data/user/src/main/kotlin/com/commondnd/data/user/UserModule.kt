@@ -2,8 +2,12 @@ package com.commondnd.data.user
 
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
+import okhttp3.Interceptor
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -33,4 +37,20 @@ internal abstract class UserModule {
     abstract fun bindTokenStorage(
         tokenStorageImpl: TokenStorageImpl
     ): TokenStorage
+
+    companion object {
+
+        @Provides
+        @Singleton
+        @IntoSet
+        fun providesUserAuthTokenInterceptor(
+            tokenStorage: TokenStorage
+        ): Interceptor = UserAuthTokenInterceptor(tokenProvider = tokenStorage::get)
+
+        @Provides
+        @Singleton
+        fun providesUserService(
+            retrofit: Retrofit
+        ): UserService = retrofit.create(UserService::class.java)
+    }
 }

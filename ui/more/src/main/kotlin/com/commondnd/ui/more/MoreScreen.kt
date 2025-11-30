@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun MoreScreen(
     modifier: Modifier = Modifier,
+    username: String?,
     onLogout: () -> Unit
 ) {
     Column(
@@ -20,7 +21,7 @@ fun MoreScreen(
     ) {
         Text("This is the More page")
         Button(onClick = onLogout) {
-            Text("Log out")
+            Text("Log out, $username")
         }
     }
 }

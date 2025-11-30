@@ -13,7 +13,9 @@ fun NavGraphRegistry.registerMoreScreens() {
         key = MoreScreen.More,
         content = { key, navController ->
             val viewModel: MoreViewModel = hiltViewModel()
-            MoreScreen(onLogout = { viewModel.logout() })
+            MoreScreen(
+                username = viewModel.getUser()?.username,
+                onLogout = { viewModel.logout() })
         }
     )
 }

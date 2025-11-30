@@ -2,6 +2,7 @@ package com.commondnd.ui.login
 
 import android.net.Uri
 import android.os.OperationCanceledException
+import com.commondnd.data.user.UserAuthData
 import com.commondnd.data.user.UserRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -63,8 +64,14 @@ internal class LoginControllerImpl @Inject constructor(
                 if (code != null) {
                     coroutineScope.launch {
                         try {
-                            val codeVerifier = (_currentState.value as LoginState.LoginStarted).codeVerifier
-                            userRepository.login(requireNotNull(code), codeVerifier)
+                            val loginStartedState = _currentState.value as LoginState.LoginStarted
+                            userRepository.login(
+                                UserAuthData(
+                                    code = requireNotNull(code),
+                                    codeVerifier = loginStartedState.codeVerifier,
+                                    redirectUri =  loginStartedState.redirectUri.toString()
+                                )
+                            )
                             _currentState.update {
                                 require(it is LoginState.LoginStarted)
                                 LoginState.LoginSuccess
