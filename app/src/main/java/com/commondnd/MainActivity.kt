@@ -19,7 +19,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,8 +26,7 @@ import com.commondnd.ui.characters.registerCharactersScreens
 import com.commondnd.ui.home.registerHomeScreens
 import com.commondnd.ui.initial.registerInitialScreens
 import com.commondnd.ui.inventory.registerInventoryScreens
-import com.commondnd.ui.login.LoginResultCode
-import com.commondnd.ui.login.LoginState
+import com.commondnd.ui.login.AuthResult
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.more.registerMoreScreens
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
@@ -40,19 +38,28 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
     private val loginLauncher = AuthTabIntent.registerActivityResultLauncher(this) { authResult ->
-        val (message, loginResult) = when (authResult.resultCode) {
-            AuthTabIntent.RESULT_OK -> {
-                "Received auth result. Uri: ${authResult.resultUri}" to LoginResultCode.Success
+
+        Log.d(
+            LOGIN_TAG,
+            when (authResult.resultCode) {
+                AuthTabIntent.RESULT_OK -> "Received auth result. Uri: ${authResult.resultUri}"
+                AuthTabIntent.RESULT_CANCELED -> "AuthTab canceled."
+                AuthTabIntent.RESULT_VERIFICATION_FAILED -> "Verification failed."
+                AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT -> "Verification timed out."
+                else -> "Unknown result"
             }
-            AuthTabIntent.RESULT_CANCELED -> "AuthTab canceled." to LoginResultCode.Cancelled
-            AuthTabIntent.RESULT_VERIFICATION_FAILED -> "Verification failed." to LoginResultCode.VerificationFailed
-            AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT -> "Verification timed out." to LoginResultCode.Timeout
-            else -> "Unknown result" to LoginResultCode.Unknown
-        }
+        )
 
-        Log.d("sdaasfasfas", message)
-
-        mainViewModel.finishAuth( authResult.resultUri?.getQueryParameter("code"), loginResult)
+        mainViewModel.finishAuth(
+            code = authResult.resultUri?.getQueryParameter("code"),
+            authResult = when (authResult.resultCode) {
+                AuthTabIntent.RESULT_OK -> AuthResult.Success
+                AuthTabIntent.RESULT_CANCELED -> AuthResult.Cancelled
+                AuthTabIntent.RESULT_VERIFICATION_FAILED -> AuthResult.VerificationFailed
+                AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT -> AuthResult.Timeout
+                else -> AuthResult.Unknown
+            }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,6 +134,11 @@ class MainActivity : AppCompatActivity() {
 
     fun isDarkTheme(): Boolean {
         return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    companion object {
+
+        private const val LOGIN_TAG = "Login"
     }
 }
 

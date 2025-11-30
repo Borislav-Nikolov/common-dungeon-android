@@ -17,7 +17,7 @@ interface LoginController {
     val currentState: Flow<LoginState>
 
     fun startAuth(codeVerifier: String, redirectUri: Uri)
-    fun finishAuth(code: String?, resultCode: LoginResultCode)
+    fun finishAuth(code: String?, authResult: AuthResult)
 }
 
 internal class LoginControllerImpl @Inject constructor(
@@ -35,23 +35,23 @@ internal class LoginControllerImpl @Inject constructor(
         }
     }
 
-    override fun finishAuth(code: String?, resultCode: LoginResultCode) {
+    override fun finishAuth(code: String?, authResult: AuthResult) {
         require(_currentState.value is LoginState.AuthorizationRequesting)
-        when (resultCode) {
-            LoginResultCode.Cancelled -> _currentState.update {
+        when (authResult) {
+            AuthResult.Cancelled -> _currentState.update {
                 require(it is LoginState.AuthorizationRequesting)
                 LoginState.AuthorizationCanceled
             }
-            LoginResultCode.VerificationFailed -> _currentState.update {
+            AuthResult.VerificationFailed -> _currentState.update {
                 require(it is LoginState.AuthorizationRequesting)
                 LoginState.AuthorizationError(OperationCanceledException())
             }
-            LoginResultCode.Timeout -> _currentState.update {
+            AuthResult.Timeout -> _currentState.update {
                 require(it is LoginState.AuthorizationRequesting)
                 LoginState.AuthorizationError(TimeoutException())
             }
 
-            LoginResultCode.Success -> {
+            AuthResult.Success -> {
                 _currentState.update {
                     require(it is LoginState.AuthorizationRequesting)
                     if (code == null) {
@@ -81,7 +81,7 @@ internal class LoginControllerImpl @Inject constructor(
                 }
 
             }
-            LoginResultCode.Unknown -> _currentState.update {
+            AuthResult.Unknown -> _currentState.update {
                 require(it is LoginState.AuthorizationRequesting)
                 LoginState.AuthorizationError(IllegalStateException())
             }
@@ -89,7 +89,7 @@ internal class LoginControllerImpl @Inject constructor(
     }
 }
 
-enum class LoginResultCode {
+enum class AuthResult {
 
     Cancelled, VerificationFailed, Timeout, Success, Unknown
 }
