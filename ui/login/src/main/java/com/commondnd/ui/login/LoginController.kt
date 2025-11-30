@@ -80,7 +80,6 @@ internal class LoginControllerImpl @Inject constructor(
                         } catch (cancellation: CancellationException) {
                             throw cancellation
                         } catch (expected: Exception) {
-                            Log.d("asldkjasldlas", "exception=$expected")
                             _currentState.update {
                                 require(it is LoginState.LoginStarted)
                                 LoginState.LoginError(error = expected)
