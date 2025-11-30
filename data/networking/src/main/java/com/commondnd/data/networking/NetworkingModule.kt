@@ -18,18 +18,23 @@ internal object NetworkingModule {
 
     @Provides
     @Singleton
+    fun provideJsonInstance() = Json { ignoreUnknownKeys = true }
+
+    @Provides
+    @Singleton
     fun providesRetrofit(
-        client: OkHttpClient
+        client: OkHttpClient,
+        json: Json
     ): Retrofit = Retrofit.Builder()
         .baseUrl("https://common-dnd-backend.fly.dev/")
         .client(client)
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 
     @Provides
     @Singleton
     fun provideOkhttpClient(
-        interceptors: Set<Interceptor>
+        interceptors: Set<@JvmSuppressWildcards Interceptor>
     ): OkHttpClient =
         OkHttpClient.Builder().apply { interceptors.forEach(this::addInterceptor) }.build()
 }

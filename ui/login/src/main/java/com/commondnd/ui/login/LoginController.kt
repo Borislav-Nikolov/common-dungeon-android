@@ -2,6 +2,7 @@ package com.commondnd.ui.login
 
 import android.net.Uri
 import android.os.OperationCanceledException
+import android.util.Log
 import com.commondnd.data.user.UserAuthData
 import com.commondnd.data.user.UserRepository
 import kotlinx.coroutines.CancellationException
@@ -79,8 +80,9 @@ internal class LoginControllerImpl @Inject constructor(
                         } catch (cancellation: CancellationException) {
                             throw cancellation
                         } catch (expected: Exception) {
+                            Log.d("asldkjasldlas", "exception=$expected")
                             _currentState.update {
-                                require(_currentState.value is LoginState.AuthorizationRequesting)
+                                require(it is LoginState.LoginStarted)
                                 LoginState.LoginError(error = expected)
                             }
                         }

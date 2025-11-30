@@ -6,6 +6,8 @@ plugins {
 
 dependencies {
 
+    implementation(projects.data.networking)
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coroutines.core)
     implementation(libs.retrofit)
