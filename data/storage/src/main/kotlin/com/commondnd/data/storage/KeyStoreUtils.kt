@@ -15,7 +15,6 @@ private const val ANDROID_KEYSTORE = "AndroidKeyStore"
 private const val TRANSFORMATION = "AES/GCM/NoPadding"
 private const val GCM_TAG_LENGTH = 128
 
-// TODO: handle exception on security (e.g. pattern, finerprint) changes
 fun getOrCreateKey(keyAlias: String): SecretKey {
     val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
 
