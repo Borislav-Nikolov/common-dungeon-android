@@ -143,6 +143,9 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 # Compose
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
+# Room
+room = { id = "androidx.room", version.ref = "room" }
+
 # Plugins defined by this project
 commondnd-android-application = { id = "commondnd.android.application" }
 commondnd-android-application-compose = { id = "commondnd.android.application.compose" }

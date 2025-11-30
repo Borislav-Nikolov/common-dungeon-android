@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.commondnd.android.library)
+    alias(libs.plugins.commondnd.android.room)
     alias(libs.plugins.commondnd.hilt)
 }
 
