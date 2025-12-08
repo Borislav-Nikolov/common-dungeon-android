@@ -27,7 +27,7 @@ data class PlayerCharacterEntity(
     @ColumnInfo(name = "character_name")
     val characterName: String,
     @ColumnInfo(name = "character_level")
-    val characterLevel: String,
+    val characterLevel: Int,
     @ColumnInfo(name = "sessions_on_this_level")
     val sessionsOnThisLevel: Int,
     @ColumnInfo(name = "last_dm")

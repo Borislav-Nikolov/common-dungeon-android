@@ -11,8 +11,8 @@ android {
 dependencies {
 
     implementation(projects.data.core)
-    implementation(projects.data.item)
-    implementation(projects.data.character)
+    api(projects.data.item)
+    api(projects.data.character)
     implementation(projects.data.networking)
     implementation(projects.data.storage)
 

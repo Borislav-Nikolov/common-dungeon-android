@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-internal const val USER_STORE = "secure_tokens"
+internal const val USER_STORE = "user_store_preferences"
 internal val Context.userDataStore by preferencesDataStore(name = USER_STORE)
 
 internal interface UserLocalDataSource {

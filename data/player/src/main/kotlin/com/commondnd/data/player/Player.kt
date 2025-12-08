@@ -30,7 +30,7 @@ data class Player(
     @SerialName("legendary_tokens")
     val legendaryTokens: Int,
     @SerialName("characters")
-    val characters: List<PlayerCharacter>,
+    val characters: List<PlayerCharacter>? = null,
     @SerialName("inventory")
-    val inventory: List<InventoryItem>
+    val inventory: List<InventoryItem>? = null
 )

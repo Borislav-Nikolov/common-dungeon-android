@@ -18,7 +18,7 @@ data class PlayerCharacter(
     @SerialName("character_name")
     val characterName: String,
     @SerialName("character_level")
-    val characterLevel: String,
+    val characterLevel: Int,
     @SerialName("sessions_on_this_level")
     val sessionsOnThisLevel: Int,
     @SerialName("last_dm")
