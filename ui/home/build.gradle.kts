@@ -12,6 +12,7 @@ dependencies {
 
     implementation(projects.data.core)
     implementation(projects.data.player)
+    implementation(projects.ui.core)
     implementation(projects.ui.navigation)
 
     implementation(libs.androidx.compose.material3)

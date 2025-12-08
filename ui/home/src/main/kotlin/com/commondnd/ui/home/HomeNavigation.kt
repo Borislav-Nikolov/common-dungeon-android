@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
+import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object HomeScreen {
@@ -32,7 +33,7 @@ fun NavGraphRegistry.registerHomeScreens() {
                     )
                 }
                 is State.Loading<*>,
-                is State.None<*> -> CircularProgressIndicator()
+                is State.None<*> -> BrightDawnLoading()
 
             }
         }

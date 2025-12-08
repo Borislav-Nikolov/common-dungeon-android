@@ -10,6 +10,7 @@ import androidx.core.net.toUri
 import com.commondnd.data.authorization.OAuthConfiguration
 import com.commondnd.data.authorization.buildAuthorizationUrl
 import com.commondnd.data.authorization.generateCodeVerifier
+import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object LoginScreen {
@@ -46,11 +47,11 @@ fun NavGraphRegistry.registerLoginScreens(
                 is LoginState.AuthorizationError -> {
                     Text("Auth error ${(state as LoginState.AuthorizationError).error} TODO: show error and have retry logic")
                 }
-                is LoginState.AuthorizationRequesting -> CircularProgressIndicator()
+                is LoginState.AuthorizationRequesting -> BrightDawnLoading()
                 is LoginState.LoginError -> {
                     Text("Auth error ${(state as LoginState.LoginError).error} TODO: show error and have retry logic")
                 }
-                is LoginState.LoginStarted -> CircularProgressIndicator()
+                is LoginState.LoginStarted -> BrightDawnLoading()
                 LoginState.LoginSuccess -> {
                     /* NO-OP */
                 }
