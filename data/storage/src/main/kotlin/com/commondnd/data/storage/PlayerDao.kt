@@ -7,12 +7,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlayer(player: PlayerEntity)
+
+    @Upsert
+    suspend fun upsertPlayer(player: PlayerEntity)
 
     @Update
     suspend fun updatePlayer(player: PlayerEntity)

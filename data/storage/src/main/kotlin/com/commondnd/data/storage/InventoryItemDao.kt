@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,6 +16,12 @@ interface InventoryItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItems(items: List<InventoryItemEntity>)
+
+    @Upsert
+    suspend fun upsertItem(item: InventoryItemEntity)
+
+    @Upsert
+    suspend fun upsertItems(items: List<InventoryItemEntity>)
 
     @Update
     suspend fun updateItem(item: InventoryItemEntity)

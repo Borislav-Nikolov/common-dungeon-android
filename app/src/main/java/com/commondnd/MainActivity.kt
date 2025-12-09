@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         )
         setContent {
             CommonDungeonMaterialTheme(darkTheme = darkTheme) {
-                val user by mainViewModel.user.collectAsState(null)
+                val user by mainViewModel.user.collectAsState()
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
                     modifier = Modifier

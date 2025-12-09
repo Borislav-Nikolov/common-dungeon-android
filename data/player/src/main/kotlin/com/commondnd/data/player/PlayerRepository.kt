@@ -1,5 +1,7 @@
 package com.commondnd.data.player
 
+import android.util.Log
+import com.commondnd.data.user.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +20,12 @@ interface PlayerRepository {
 
 internal class PlayerRepositoryImpl @Inject constructor(
     private val playerRemoteSource: PlayerRemoteSource,
-    // TODO: use
     private val playerLocalSource: PlayerLocalSource,
-    private val coroutineScope: CoroutineScope
-) : PlayerRepository {
+    private val coroutineScope: CoroutineScope,
+    private val userRepository: UserRepository
+) : PlayerRepository, SynchronizationElement /* TODO: add such elements with a sync method through
+                                                 dagger and sync on app start (via Worker - see nowinandroid)
+                                                  and also have a pull to refresh on the UI */ {
 
     private val ownPlayerData = MutableStateFlow<Player?>(null)
 
@@ -41,12 +45,20 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     private suspend fun initIfNeeded() {
         if (ownPlayerData.value == null) {
-            ownPlayerData.update {
-                playerRemoteSource.getOwnPlayerData(
-                    includeInventory = true,
-                    includeCharacters = true
-                )
-            }
+            ownPlayerData.update { getPlayer() }
         }
+    }
+
+    private suspend fun getPlayer(): Player {
+        val user = requireNotNull(userRepository.getUser())
+        var player: Player? = playerLocalSource.getPlayer(user.id)
+        if (player == null) {
+            player = playerRemoteSource.getOwnPlayerData(
+                includeInventory = true,
+                includeCharacters = true
+            )
+            playerLocalSource.storePlayer(player)
+        }
+        return requireNotNull(player)
     }
 }

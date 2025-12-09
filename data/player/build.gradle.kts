@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.data.core)
     api(projects.data.item)
     api(projects.data.character)
+    implementation(projects.data.user)
     implementation(projects.data.networking)
     implementation(projects.data.storage)
 

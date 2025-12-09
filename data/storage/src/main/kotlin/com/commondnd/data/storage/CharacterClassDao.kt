@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 
 @Dao
 interface CharacterClassDao {
@@ -14,6 +15,12 @@ interface CharacterClassDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertClasses(classes: List<CharacterClassEntity>)
+
+    @Upsert
+    suspend fun upsertClass(character: CharacterClassEntity)
+
+    @Upsert
+    suspend fun upsertClass(characters: List<CharacterClassEntity>)
 
     @Update
     suspend fun updateClass(characterClass: CharacterClassEntity)

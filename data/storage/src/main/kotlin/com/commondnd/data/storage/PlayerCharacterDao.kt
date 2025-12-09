@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.Upsert
 
 @Dao
 interface PlayerCharacterDao {
@@ -15,6 +16,12 @@ interface PlayerCharacterDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacters(characters: List<PlayerCharacterEntity>): List<Long>
+
+    @Upsert
+    suspend fun upsertCharacter(character: PlayerCharacterEntity): Long
+
+    @Upsert
+    suspend fun upsertCharacters(characters: List<PlayerCharacterEntity>): List<Long>
 
     @Update
     suspend fun updateCharacter(character: PlayerCharacterEntity)

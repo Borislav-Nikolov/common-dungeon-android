@@ -1,7 +1,9 @@
 package com.commondnd
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commondnd.data.core.State
 import com.commondnd.data.user.User
 import com.commondnd.data.user.UserRepository
 import com.commondnd.ui.characters.CharactersScreen
@@ -13,8 +15,11 @@ import com.commondnd.ui.more.MoreScreen
 import com.commondnd.ui.navigation.GroupedNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,10 +30,16 @@ class MainViewModel @Inject constructor(
     private val loginController: LoginController
 ) : ViewModel(), GroupedNavController by navController, LoginController by loginController {
 
+    val user: StateFlow<User?> = userRepository.monitorUser().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null
+    )
+
     init {
         push(CommonNavigationGroup.Blank, CommonNavigationGroup.Blank.groupInitialScreen)
         viewModelScope.launch {
-            user.distinctUntilChanged().collectLatest {
+            user.collectLatest {
                 makeCurrent(
                     if (it != null) {
                         CommonNavigationGroup.UserScoped.Home
@@ -40,9 +51,6 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-    val user: Flow<User?>
-        get() = userRepository.monitorUser()
 
     val navigationTabs: List<CommonNavigationGroup.UserScoped> = listOf(
         CommonNavigationGroup.UserScoped.Home,
