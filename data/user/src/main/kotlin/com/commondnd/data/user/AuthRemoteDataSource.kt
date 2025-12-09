@@ -9,6 +9,8 @@ internal interface AuthRemoteDataSource {
     ): String
 
     suspend fun getUser(): User
+
+    suspend fun logout()
 }
 
 internal class AuthRemoteDataSourceImpl @Inject constructor(
@@ -21,5 +23,9 @@ internal class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getUser(): User {
         return userService.getUser()
+    }
+
+    override suspend fun logout() {
+        userService.logout()
     }
 }

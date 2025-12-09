@@ -13,4 +13,7 @@ interface UserService {
 
     @GET("api/user")
     suspend fun getUser(): User
+
+    @GET("logout")
+    suspend fun logout()
 }

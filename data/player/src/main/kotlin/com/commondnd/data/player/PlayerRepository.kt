@@ -23,7 +23,7 @@ internal class PlayerRepositoryImpl @Inject constructor(
     private val playerLocalSource: PlayerLocalSource,
     private val coroutineScope: CoroutineScope,
     private val userRepository: UserRepository
-) : PlayerRepository, SynchronizationElement /* TODO: add such elements with a sync method through
+) : PlayerRepository /*, SynchronizationElement TODO: add such elements with a sync method through
                                                  dagger and sync on app start (via Worker - see nowinandroid)
                                                   and also have a pull to refresh on the UI */ {
 
