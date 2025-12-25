@@ -37,7 +37,7 @@ internal class PlayerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun synchronize(): Boolean {
-        init()
+        userRepository.getUser()?.id?.let { init(it) }
         return true
     }
 
@@ -48,17 +48,16 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     private suspend fun initIfNeeded() {
         if (ownPlayerData.value == null) {
-            init()
+            init(requireNotNull(userRepository.getUser()).id)
         }
     }
 
-    private suspend fun init() {
-        ownPlayerData.update { getPlayer() }
+    private suspend fun init(playerId: String) {
+        ownPlayerData.update { getPlayer(playerId) }
     }
 
-    private suspend fun getPlayer(): Player {
-        val user = requireNotNull(userRepository.getUser())
-        var player: Player? = playerLocalSource.getPlayer(user.id)
+    private suspend fun getPlayer(playerId: String): Player {
+        var player: Player? = playerLocalSource.getPlayer(playerId)
         if (player == null) {
             player = playerRemoteSource.getOwnPlayerData(
                 includeInventory = true,

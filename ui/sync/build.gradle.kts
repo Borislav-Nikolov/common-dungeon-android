@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.ui.core)
     implementation(projects.data.core)
 
+    ksp(libs.hilt.ext.compiler)
     implementation(libs.androidx.work.ktx)
     implementation(libs.hilt.ext.work)
 }
