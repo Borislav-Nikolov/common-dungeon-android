@@ -1,10 +1,12 @@
 package com.commondnd.data.player
 
+import com.commondnd.data.core.Synchronizable
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -23,6 +25,13 @@ internal abstract class PlayerModule {
     @Binds
     @Singleton
     abstract fun bindsPlayerRepository(impl: PlayerRepositoryImpl): PlayerRepository
+
+    @Binds
+    @Singleton
+    @IntoSet
+    abstract fun bindPlayerRepositorySynchronizable(
+        userRepository: PlayerRepositoryImpl
+    ): Synchronizable
 
     companion object {
 

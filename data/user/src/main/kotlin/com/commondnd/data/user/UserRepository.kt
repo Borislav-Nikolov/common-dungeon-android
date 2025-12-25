@@ -1,5 +1,6 @@
 package com.commondnd.data.user
 
+import com.commondnd.data.core.Synchronizable
 import com.commondnd.data.storage.PlayerDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
+import okio.IOException
 import javax.inject.Inject
 
 interface UserRepository {
@@ -23,7 +25,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private val tokenStorage: TokenStorage,
     private val playerDao: PlayerDao,
     coroutineScope: CoroutineScope
-) : UserRepository {
+) : UserRepository, Synchronizable {
 
     private val cachedUser: MutableStateFlow<User?> = MutableStateFlow(null)
 
@@ -50,11 +52,32 @@ internal class UserRepositoryImpl @Inject constructor(
         cachedUser.update { null }
     }
 
+    override suspend fun synchronize(): Boolean {
+        val token = tokenStorage.get()
+        if (token == null) {
+            localSource.clear()
+            playerDao.deleteAllPlayers()
+            return true
+        }
+        val remoteUser = try {
+            remoteSource.getUser()
+        } catch (_: IOException) {
+            logout()
+            return true
+        }
+        localSource.store(remoteUser)
+        return true
+    }
+
     private suspend fun initiateUser(): User? = tokenStorage.get()?.let {
         cachedUser.updateAndGet { getOrFetchUser() }
     }
 
-    private suspend fun getOrFetchUser(): User {
-        return localSource.get() ?: remoteSource.getUser().also { localSource.store(it) }
+    private suspend fun getOrFetchUser(): User? {
+        return localSource.get() ?: try {
+            remoteSource.getUser().also { localSource.store(it) }
+        } catch (_: IOException) {
+            return null
+        }
     }
 }

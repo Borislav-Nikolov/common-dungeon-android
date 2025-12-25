@@ -43,6 +43,7 @@ dependencies {
     implementation(projects.ui.characters)
     implementation(projects.ui.inventory)
     implementation(projects.ui.more)
+    implementation(projects.ui.sync)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.icons)

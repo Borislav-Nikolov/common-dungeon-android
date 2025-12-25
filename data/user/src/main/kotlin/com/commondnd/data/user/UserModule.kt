@@ -3,6 +3,7 @@ package com.commondnd.data.user
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.commondnd.data.core.Synchronizable
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,13 @@ internal abstract class UserModule {
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+    @Binds
+    @Singleton
+    @IntoSet
+    abstract fun bindUserRepositorySynchronizable(
+        userRepository: UserRepositoryImpl
+    ): Synchronizable
 
     @Binds
     @Singleton
