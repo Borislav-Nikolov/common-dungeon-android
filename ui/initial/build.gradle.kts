@@ -17,4 +17,5 @@ dependencies {
     implementation(projects.ui.material3)
 
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.icons)
 }
