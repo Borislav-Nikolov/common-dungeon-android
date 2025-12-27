@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.commondnd.android.application)
     alias(libs.plugins.commondnd.android.application.compose)
     alias(libs.plugins.commondnd.hilt)
+    alias(libs.plugins.gms)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -16,9 +18,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -49,6 +48,9 @@ dependencies {
     implementation(libs.androidx.compose.material3.icons)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     implementation(libs.hilt.ext.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
