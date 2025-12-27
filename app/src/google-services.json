@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "363108651839",
+    "firebase_url": "https://commondungeonbot-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "commondungeonbot",
+    "storage_bucket": "commondungeonbot.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363108651839:android:d2184357f039f2f210398a",
+        "android_client_info": {
+          "package_name": "com.commondnd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363108651839-502n5ep4j5qs9l559p5qlnf9qkisjupm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPOE1vCTztN7IaCtHrKfK8jFBPqS___hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363108651839-502n5ep4j5qs9l559p5qlnf9qkisjupm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

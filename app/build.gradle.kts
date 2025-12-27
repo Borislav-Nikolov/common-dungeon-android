@@ -1,18 +1,16 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.commondnd.android.application)
+    alias(libs.plugins.commondnd.android.application.compose)
+    alias(libs.plugins.commondnd.hilt)
+    alias(libs.plugins.gms)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
     namespace = "com.commondnd"
-    compileSdk {
-        version = release(36)
-    }
 
     defaultConfig {
         applicationId = "com.commondnd"
-        minSdk = 29
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -28,20 +26,34 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
+
+    implementation(projects.domain)
+    implementation(projects.data.core)
+    implementation(projects.data.user)
+    implementation(projects.ui.core)
+    implementation(projects.ui.material3)
+    implementation(projects.ui.navigation)
+    implementation(projects.ui.initial)
+    implementation(projects.ui.login)
+    implementation(projects.ui.home)
+    implementation(projects.ui.characters)
+    implementation(projects.ui.inventory)
+    implementation(projects.ui.more)
+    implementation(projects.ui.sync)
+
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.icons)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+    implementation(libs.hilt.ext.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.browser)
 }

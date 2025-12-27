@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CommonDungeon</string>
+    <string name="label_details">Details</string>
 </resources>
