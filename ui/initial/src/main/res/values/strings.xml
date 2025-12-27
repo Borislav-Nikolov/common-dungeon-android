@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_initial_screen">Welcome to CommonDungeon</string>
+    <string name="description_initial_screen">✨ Immerse yourself in our TTRPG community.\n➡️ If you already have an account with us, proceed to log in with Discrod.\n🤔 Otherwise, click on \'Learn more\' to find out how you can join.</string>
+    <string name="label_log_in_with_discord">Log in with Discord</string>
+    <string name="label_learn_more">Learn more</string>
+</resources>

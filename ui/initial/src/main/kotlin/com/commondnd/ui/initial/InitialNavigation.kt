@@ -2,8 +2,12 @@ package com.commondnd.ui.initial
 
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.commondnd.ui.login.LoginController
 import com.commondnd.ui.login.LoginScreen
 import com.commondnd.ui.login.registerLoginScreens
@@ -33,6 +37,10 @@ fun NavGraphRegistry.registerInitialScreens(
         key = InitialScreen.Initial,
         content = { key, navController ->
             InitialScreen(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .padding(16.dp),
                 onLoginClick = {
                     navController.push(LoginScreen.Login)
                 },
