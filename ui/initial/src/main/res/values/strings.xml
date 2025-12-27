@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_initial_screen">Welcome to CommonDungeon</string>
-    <string name="description_initial_screen">✨ Immerse yourself in our TTRPG community.\n➡️ If you already have an account with us, proceed to log in with Discrod.\n🤔 Otherwise, click on \'Learn more\' to find out how you can join.</string>
+    <string name="description_initial_screen">✨ Immerse yourself in our D&amp;D community.\n➡️ If you already have an account with us, proceed to log in with Discrod.\n🤔 Otherwise, click on \'Learn more\' to find out how you can join.</string>
     <string name="label_log_in_with_discord">Log in with Discord</string>
     <string name="label_learn_more">Learn more</string>
+    <string name="title_section_learn_more_1">What is CommonDungeon?</string>
+    <string name="description_section_learn_more_1">CommonDungeon is a community of nerds where we primarily play D&amp;D 5e using an augmented West Marches style.\nThe setting is the colorful world of Mistra and our characters are part of the powerful Bright Dawn adventuring guild.</string>
+    <string name="title_section_learn_more_2">How can I join?</string>
+    <string name="description_section_learn_more_2">The usual way people join is when they know someone in the server and that someone makes an application for those new people.\nBut you can write to common.dungeon@gmail.com if you are interested and we\'ll see what we can do.</string>
 </resources>
