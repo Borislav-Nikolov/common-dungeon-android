@@ -18,6 +18,4 @@ dependencies {
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.networkHttp)
 }

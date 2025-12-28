@@ -8,6 +8,11 @@ android {
 }
 
 dependencies {
+
+    implementation(projects.data.user)
+
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.icons)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.networkHttp)
 }

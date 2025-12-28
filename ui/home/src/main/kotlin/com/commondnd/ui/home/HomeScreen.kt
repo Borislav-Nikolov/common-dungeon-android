@@ -1,13 +1,14 @@
 package com.commondnd.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import coil3.compose.AsyncImage
 import com.commondnd.data.player.Player
 import com.commondnd.data.user.User
+import com.commondnd.ui.core.DiscordAvatar
 
 @Composable
 fun HomeScreen(
@@ -20,9 +21,6 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AsyncImage(
-            model = user?.avatar,
-            contentDescription = null
-        )
+        DiscordAvatar(user)
     }
 }
