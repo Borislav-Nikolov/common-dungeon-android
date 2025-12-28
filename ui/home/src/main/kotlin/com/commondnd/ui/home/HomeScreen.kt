@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Autorenew
+import androidx.compose.material.icons.rounded.CurrencyExchange
 import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,7 +37,8 @@ import com.commondnd.ui.material3.veryRareTokenColor
 fun HomeScreen(
     modifier: Modifier = Modifier,
     user: User?,
-    playerData: Player
+    playerData: Player,
+    onExchangeTokens: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -50,6 +54,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(vertical = 4.dp),
                     style = MaterialTheme.typography.labelLarge,
                     text = stringResource(R.string.label_level_format, playerData.playerLevel)
                 )
@@ -59,11 +64,44 @@ fun HomeScreen(
                         .fillMaxWidth(),
                     progress = { playerData.sessionsOnThisLevel.toFloat() / 6 }
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.bodySmall,
+                        text = stringResource(R.string.label_role_format, playerData.playerRole)
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 8.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        text = stringResource(R.string.label_status_format, playerData.playerStatus)
+                    )
+                }
             }
         }
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.titleMedium,
+                    text = stringResource(R.string.label_tokens)
+                )
+                IconButton(
+                    onClick = onExchangeTokens
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.CurrencyExchange,
+                        contentDescription = stringResource(R.string.content_description_exchange_tokens)
+                    )
+                }
+            }
             repeat(5) {
                 Row(
                     modifier = Modifier
@@ -77,7 +115,7 @@ fun HomeScreen(
                         tint = it.tokenColor
                     )
                     Text(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).padding(start = 8.dp),
                         text = "${it.tokenText}:",
                     )
                     Text(
