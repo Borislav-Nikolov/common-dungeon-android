@@ -1,5 +1,6 @@
 package com.commondnd.data.user
 
+import android.util.Log
 import com.commondnd.data.core.Synchronizable
 import com.commondnd.data.storage.PlayerDao
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,9 @@ internal class UserRepositoryImpl @Inject constructor(
 
     init {
 
-        coroutineScope.launch { initiateUser() }
+        coroutineScope.launch {
+            Log.d("sadljaslfdjaslkdfj", "initiateUser: ${this@UserRepositoryImpl}")
+            initiateUser() }
     }
 
     override fun getUser(): User? = cachedUser.value
@@ -39,8 +42,11 @@ internal class UserRepositoryImpl @Inject constructor(
     override fun monitorUser(): Flow<User?> = cachedUser
 
     override suspend fun login(userAuthData: UserAuthData) {
+        Log.d("sadljaslfdjaslkdfj", "remoteSource.getToken(userAuthData)")
         tokenStorage.store(remoteSource.getToken(userAuthData))
+        Log.d("sadljaslfdjaslkdfj", "remoteSource.getUser()")
         localSource.store(remoteSource.getUser())
+        Log.d("sadljaslfdjaslkdfj", "cachedUser.update { localSource.get() }")
         cachedUser.update { localSource.get() }
     }
 
@@ -53,15 +59,18 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun synchronize(): Boolean {
+        Log.d("sadljaslfdjaslkdfj", "synchronize")
         val token = tokenStorage.get()
         if (token == null) {
             localSource.clear()
             playerDao.deleteAllPlayers()
             return true
         }
+        Log.d("sadljaslfdjaslkdfj", "synchronize.get user")
         val remoteUser = try {
             remoteSource.getUser()
-        } catch (_: IOException) {
+        } catch (_: Exception) {
+            Log.d("sadljaslfdjaslkdfj", "synchronize.logout")
             logout()
             return true
         }
@@ -76,7 +85,9 @@ internal class UserRepositoryImpl @Inject constructor(
     private suspend fun getOrFetchUser(): User? {
         return localSource.get() ?: try {
             remoteSource.getUser().also { localSource.store(it) }
-        } catch (_: IOException) {
+        } catch (_: Exception) {
+            Log.d("sadljaslfdjaslkdfj", "logging out")
+            logout()
             return null
         }
     }

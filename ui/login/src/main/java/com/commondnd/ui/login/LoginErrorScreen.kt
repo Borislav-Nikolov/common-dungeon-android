@@ -32,7 +32,7 @@ private fun rememberLoginErrorSpecProvider(context: Context): ErrorSpecProvider 
     object : ErrorSpecProvider {
         override fun get(error: Throwable): ErrorSpec? {
             return when (error) {
-                NoAccountException -> ErrorSpec(
+                is NoAccountException -> ErrorSpec(
                     title = context.getString(R.string.title_error_no_player_account),
                     description = context.getString(R.string.description_error_no_player_account),
                     primaryAction = "retry" to context.getString(com.commondnd.ui.core.R.string.label_action_retry)

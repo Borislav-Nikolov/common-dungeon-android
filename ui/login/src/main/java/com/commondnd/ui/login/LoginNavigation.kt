@@ -2,12 +2,14 @@ package com.commondnd.ui.login
 
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.commondnd.data.authorization.OAuthConfiguration
 import com.commondnd.data.authorization.buildAuthorizationUrl
@@ -48,18 +50,12 @@ fun NavGraphRegistry.registerLoginScreens(
                     navController.pop()
                 }
                 is LoginState.AuthorizationError -> LoginErrorScreen(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .fillMaxSize(),
                     error = currentState.error,
                     onBack = { navController.pop() },
                     onRetry = { startLogin() }
                 )
                 is LoginState.AuthorizationRequesting -> BrightDawnLoading()
                 is LoginState.LoginError -> LoginErrorScreen(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .fillMaxSize(),
                     error = currentState.error,
                     onBack = { navController.pop() },
                     onRetry = { startLogin() }

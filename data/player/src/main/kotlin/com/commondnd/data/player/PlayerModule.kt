@@ -26,14 +26,14 @@ internal abstract class PlayerModule {
     @Singleton
     abstract fun bindsPlayerRepository(impl: PlayerRepositoryImpl): PlayerRepository
 
-    @Binds
-    @Singleton
-    @IntoSet
-    abstract fun bindPlayerRepositorySynchronizable(
-        userRepository: PlayerRepositoryImpl
-    ): Synchronizable
-
     companion object {
+
+        @Provides
+        @Singleton
+        @IntoSet
+        fun providePlayerRepositorySynchronizable(
+            playerRepository: PlayerRepository
+        ): Synchronizable = playerRepository as Synchronizable
 
         @Provides
         @Singleton

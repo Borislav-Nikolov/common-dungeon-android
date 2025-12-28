@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import retrofit2.Retrofit
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -26,13 +27,6 @@ internal abstract class UserModule {
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
-
-    @Binds
-    @Singleton
-    @IntoSet
-    abstract fun bindUserRepositorySynchronizable(
-        userRepository: UserRepositoryImpl
-    ): Synchronizable
 
     @Binds
     @Singleton
@@ -57,6 +51,13 @@ internal abstract class UserModule {
         @Provides
         @Singleton
         @IntoSet
+        fun provideUserRepositorySynchronizable(
+            userRepository: UserRepository
+        ): Synchronizable = userRepository as Synchronizable
+
+        @Provides
+        @Singleton
+        @IntoSet
         fun providesUserAuthTokenInterceptor(
             tokenStorage: TokenStorage
         ): Interceptor = UserAuthTokenInterceptor(
@@ -67,9 +68,9 @@ internal abstract class UserModule {
         @Singleton
         @IntoSet
         fun providesUnauthorizedResponseInterceptor(
-            userRepository: UserRepository
+            userRepository: Provider<UserRepository>
         ): Interceptor = UnauthorizedResponseInterceptor(
-            onUnauthorizedResponse = { runBlocking {  userRepository.logout() } }
+            onUnauthorizedResponse = { runBlocking {  userRepository.get().logout() } }
         )
 
         @Provides
