@@ -53,7 +53,9 @@ fun NavGraphRegistry.registerInitialScreens(
     register(
         key = InitialScreen.About,
         content = { key, navController ->
-            AboutScreen()
+            AboutScreen(
+                onBack = { navController.pop() }
+            )
         }
     )
 

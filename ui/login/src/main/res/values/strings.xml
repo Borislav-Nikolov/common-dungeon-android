@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_error_no_player_account">Not registered in CommonDungeon</string>
+    <string name="description_error_no_player_account">You\'ve not been registered as s CommonDungeon player.\nPlease contact us at common.dungeon@gmail.com for more information.</string>
+</resources>
