@@ -3,6 +3,7 @@ package com.commondnd.ui.core
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BasicScreen(
@@ -92,7 +94,7 @@ fun BasicScreen(
     ) {
         image?.let {
             Image(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).sizeIn(minWidth = 80.dp, minHeight = 80.dp, maxWidth = 200.dp, maxHeight = 200.dp),
                 painter = it,
                 contentDescription = null
             )
