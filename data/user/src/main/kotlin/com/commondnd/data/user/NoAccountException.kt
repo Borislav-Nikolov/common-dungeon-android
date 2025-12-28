@@ -1,3 +1,5 @@
 package com.commondnd.data.user
 
-object NoAccountException : RuntimeException()
+class NoAccountException(
+    cause: Throwable?
+) : RuntimeException(cause)

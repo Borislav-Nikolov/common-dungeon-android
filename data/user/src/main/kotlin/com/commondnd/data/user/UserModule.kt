@@ -65,6 +65,15 @@ internal abstract class UserModule {
 
         @Provides
         @Singleton
+        @IntoSet
+        fun providesUnauthorizedResponseInterceptor(
+            userRepository: UserRepository
+        ): Interceptor = UnauthorizedResponseInterceptor(
+            onUnauthorizedResponse = { runBlocking {  userRepository.logout() } }
+        )
+
+        @Provides
+        @Singleton
         fun providesUserService(
             retrofit: Retrofit
         ): UserService = retrofit.create(UserService::class.java)

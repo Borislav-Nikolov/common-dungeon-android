@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -119,7 +122,7 @@ fun BasicScreen(
             }
         }
         if (secondaryAction != null && secondaryActionLabel != null) {
-            Button(
+            FilledTonalButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = secondaryAction
             ) {
@@ -127,7 +130,7 @@ fun BasicScreen(
             }
         }
         if (alternativeAction != null && alternativeActionLabel != null) {
-            Button(
+            OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = alternativeAction
             ) {
@@ -135,7 +138,7 @@ fun BasicScreen(
             }
         }
         if (tertiaryAction != null && tertiaryActionLabel != null) {
-            Button(
+            TextButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = tertiaryAction
             ) {

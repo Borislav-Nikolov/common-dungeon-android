@@ -1,3 +1,5 @@
 package com.commondnd.data.user
 
-object TokenExpiredException : RuntimeException()
+class TokenExpiredException(
+    cause: Throwable?
+) : RuntimeException(cause)
