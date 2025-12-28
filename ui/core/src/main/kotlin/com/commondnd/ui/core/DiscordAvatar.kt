@@ -14,17 +14,25 @@ import coil3.compose.AsyncImage
 import com.commondnd.data.user.User
 
 @Composable
-fun DiscordAvatar(user: User?) {
-    DiscordAvatar(user?.id, user?.avatar)
+fun DiscordAvatar(
+    modifier: Modifier = Modifier,
+    user: User?
+) {
+    DiscordAvatar(
+        modifier = modifier,
+        user?.id,
+        user?.avatar
+    )
 }
 
 @Composable
 fun DiscordAvatar(
+    modifier: Modifier = Modifier,
     userId: String?,
     userAvatar: String?
 ) {
     AsyncImage(
-        modifier = Modifier
+        modifier = modifier
             .size(64.dp)
             .clip(CircleShape)
             .border(
