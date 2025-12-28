@@ -19,13 +19,17 @@ fun NavGraphRegistry.registerHomeScreens() {
         key = HomeScreen.Home,
         content = { key, navController ->
             val viewModel: HomeViewModel = hiltViewModel()
+            val userState by viewModel.userState.collectAsState()
             val playerDataState by viewModel.playerDataState.collectAsState()
             when (val state = playerDataState) {
                 is State.Error -> {
                     Text("Error: ${state.error}")
                 }
                 is State.Loaded -> {
-                    HomeScreen(playerData = state.value)
+                    HomeScreen(
+                        user = (userState as? State.Loaded)?.value,
+                        playerData = state.value
+                    )
                 }
                 is State.Loading,
                 is State.None -> BrightDawnLoading()
