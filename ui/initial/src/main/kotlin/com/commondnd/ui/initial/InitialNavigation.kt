@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.login.LoginController
 import com.commondnd.ui.login.LoginScreen
 import com.commondnd.ui.login.registerLoginScreens
@@ -26,16 +27,17 @@ fun NavGraphRegistry.registerInitialScreens(
 ) {
     register(
         key = InitialScreen.Splash,
-        content = { key, navController ->
-            // TODO:
+        content = { _, _ ->
             Surface(
                 modifier = Modifier.fillMaxSize()
-            ) { }
+            ) {
+                BrightDawnLoading()
+            }
         }
     )
     register(
         key = InitialScreen.Initial,
-        content = { key, navController ->
+        content = { _, navController ->
             InitialScreen(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -52,10 +54,8 @@ fun NavGraphRegistry.registerInitialScreens(
     )
     register(
         key = InitialScreen.About,
-        content = { key, navController ->
-            AboutScreen(
-                onBack = { navController.pop() }
-            )
+        content = { _, navController ->
+            AboutScreen(onBack = { navController.pop() })
         }
     )
 
