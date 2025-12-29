@@ -1,21 +1,16 @@
 package com.commondnd.ui.home
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Autorenew
 import androidx.compose.material.icons.rounded.CurrencyExchange
 import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.commondnd.data.player.Player
 import com.commondnd.data.user.User
 import com.commondnd.ui.core.DiscordAvatar
+import com.commondnd.ui.core.ExperienceBar
 import com.commondnd.ui.material3.commonTokenColor
 import com.commondnd.ui.material3.legendaryTokenColor
 import com.commondnd.ui.material3.rareTokenColor
@@ -44,36 +40,42 @@ fun HomeScreen(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            modifier = Modifier.padding(top = 24.dp),
+            style = MaterialTheme.typography.headlineLarge,
+            text = playerData.name
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            DiscordAvatar(user = user)
+            DiscordAvatar(
+                modifier = Modifier.size(80.dp),
+                user = user
+            )
             Column(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     text = stringResource(R.string.label_level_format, playerData.playerLevel)
                 )
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .fillMaxWidth(),
-                    progress = { playerData.sessionsOnThisLevel.toFloat() / 6 }
+                ExperienceBar(
+                    currentProgress = playerData.sessionsOnThisLevel,
+                    maxProgress = 6
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 ) {
                     Text(
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         text = stringResource(R.string.label_role_format, playerData.playerRole)
                     )
                     Text(
                         modifier = Modifier.padding(start = 8.dp),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         text = stringResource(R.string.label_status_format, playerData.playerStatus)
                     )
                 }
