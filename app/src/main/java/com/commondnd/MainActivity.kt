@@ -81,8 +81,7 @@ class MainActivity : AppCompatActivity() {
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .systemBarsPadding(),
+                        .fillMaxSize(),
                     content = { contentPadding ->
                         Surface(
                             modifier = Modifier
