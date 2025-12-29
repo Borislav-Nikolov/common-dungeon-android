@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.data.core.State
 import com.commondnd.ui.core.BrightDawnLoading
+import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object HomeScreen {
@@ -20,13 +21,16 @@ fun NavGraphRegistry.registerHomeScreens() {
 
     register(
         key = HomeScreen.Home,
-        content = { key, navController ->
+        content = { _, navController ->
             val viewModel: HomeViewModel = hiltViewModel()
             val userState by viewModel.userState.collectAsState()
             val playerDataState by viewModel.playerDataState.collectAsState()
             when (val state = playerDataState) {
                 is State.Error -> {
-                    Text("Error: ${state.error}")
+                    ErrorScreen(
+                        error = state.error,
+                        onBack = { navController.pop() }
+                    )
                 }
 
                 is State.Loaded -> {

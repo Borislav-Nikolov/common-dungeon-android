@@ -7,20 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.commondnd.data.player.Player
 
 @Composable
 fun CharactersScreen(
     modifier: Modifier = Modifier,
-    onDetailsClick: () -> Unit
+    player: Player
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text("This is the CHARACTERS page")
-        Button(onClick = onDetailsClick) {
-            Text("Details")
-        }
-    }
+
 }

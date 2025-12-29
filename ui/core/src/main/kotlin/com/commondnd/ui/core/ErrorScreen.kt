@@ -94,7 +94,7 @@ fun ErrorScreen(
     modifier: Modifier = Modifier,
     errorSpecProvider: ErrorSpecProvider = ErrorSpecProvider.Default,
     error: Throwable,
-    onAction: (Any) -> Unit,
+    onAction: ((Any) -> Unit)? = null,
     onBack: () -> Unit
 ) {
     Scaffold(

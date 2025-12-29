@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.exp
 
 @Composable
 fun ExpandableCard(
@@ -30,17 +31,42 @@ fun ExpandableCard(
     onExpand: () -> Unit,
     onCollapse: () -> Unit
 ) {
+    ExpandableCard(
+        modifier = modifier,
+        isExpanded = isExpanded,
+        onExpand = onExpand,
+        onCollapse = onCollapse,
+        headerContent = {
+            with(section) {
+                ProvideTextStyle(MaterialTheme.typography.titleMedium) {
+                    SectionHeader()
+                }
+            }
+        },
+        expandedContent = {
+            with(section) {
+                SectionContent()
+            }
+        }
+    )
+}
+
+@Composable
+fun ExpandableCard(
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean,
+    onExpand: () -> Unit,
+    onCollapse: () -> Unit,
+    headerContent: @Composable RowScope.() -> Unit,
+    expandedContent: @Composable BoxScope.() -> Unit
+) {
     Card(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            with(section) {
-                ProvideTextStyle(MaterialTheme.typography.titleMedium) {
-                    SectionHeader()
-                }
-            }
+            headerContent()
             IconButton(
                 onClick = {
                     if (isExpanded) {
@@ -62,9 +88,7 @@ fun ExpandableCard(
         ) {
             ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
                 Box(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
-                    with(section) {
-                        SectionContent()
-                    }
+                    expandedContent()
                 }
             }
         }

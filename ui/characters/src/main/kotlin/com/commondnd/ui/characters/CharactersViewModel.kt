@@ -1,0 +1,34 @@
+package com.commondnd.ui.characters
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.commondnd.data.core.State
+import com.commondnd.data.player.Player
+import com.commondnd.data.player.PlayerRepository
+import com.commondnd.data.user.User
+import com.commondnd.data.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+
+@HiltViewModel
+class CharactersViewModel @Inject constructor(
+    playerRepository: PlayerRepository
+) : ViewModel() {
+
+    val playerDataState: StateFlow<State<Player>> = playerRepository
+        .monitorOwnPlayerData()
+        .map<Player, State<Player>> { State.Loaded(it) }
+        .onStart { emit(State.Loading()) }
+        .catch { emit(State.Error(it)) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = State.None()
+        )
+}
