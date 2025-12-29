@@ -45,85 +45,117 @@ fun HomeScreen(
             style = MaterialTheme.typography.headlineLarge,
             text = playerData.name
         )
+        PlayerInfoRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            user = user,
+            playerData = playerData
+        )
+        TokensCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onExchangeTokens = onExchangeTokens,
+            playerData = playerData
+        )
+    }
+}
+
+@Composable
+private fun TokensCard(
+    modifier: Modifier = Modifier,
+    onExchangeTokens: () -> Unit,
+    playerData: Player
+) {
+    Card(
+        modifier = modifier
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            DiscordAvatar(
-                modifier = Modifier.size(80.dp),
-                user = user
+            Text(
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(R.string.label_tokens)
             )
-            Column(
-                modifier = Modifier.padding(start = 16.dp)
+            IconButton(
+                onClick = onExchangeTokens
             ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    style = MaterialTheme.typography.titleMedium,
-                    text = stringResource(R.string.label_level_format, playerData.playerLevel)
+                Icon(
+                    imageVector = Icons.Rounded.CurrencyExchange,
+                    contentDescription = stringResource(R.string.content_description_exchange_tokens)
                 )
-                ExperienceBar(
-                    currentProgress = playerData.sessionsOnThisLevel,
-                    maxProgress = 6
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                ) {
-                    Text(
-                        style = MaterialTheme.typography.bodyMedium,
-                        text = stringResource(R.string.label_role_format, playerData.playerRole)
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        text = stringResource(R.string.label_status_format, playerData.playerStatus)
-                    )
-                }
             }
         }
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
+        repeat(5) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.titleMedium,
-                    text = stringResource(R.string.label_tokens)
+                Icon(
+                    imageVector = Icons.Rounded.Token,
+                    contentDescription = null,
+                    tint = it.tokenColor
                 )
-                IconButton(
-                    onClick = onExchangeTokens
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.CurrencyExchange,
-                        contentDescription = stringResource(R.string.content_description_exchange_tokens)
-                    )
-                }
-            }
-            repeat(5) {
-                Row(
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Token,
-                        contentDescription = null,
-                        tint = it.tokenColor
-                    )
-                    Text(
-                        modifier = Modifier.weight(1f).padding(start = 8.dp),
-                        text = "${it.tokenText}:",
-                    )
-                    Text(
-                        text = it.tokenCount(playerData).toString()
-                    )
-                }
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    text = "${it.tokenText}:",
+                )
+                Text(
+                    text = it.tokenCount(playerData).toString()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayerInfoRow(
+    modifier: Modifier = Modifier,
+    user: User?,
+    playerData: Player
+) {
+    Row(
+        modifier = modifier
+    ) {
+        DiscordAvatar(
+            modifier = Modifier.size(80.dp),
+            user = user
+        )
+        Column(
+            modifier = Modifier.padding(start = 16.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(R.string.label_level_format, playerData.playerLevel)
+            )
+            ExperienceBar(
+                currentProgress = playerData.sessionsOnThisLevel,
+                maxProgress = 6
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(R.string.label_role_format, playerData.playerRole)
+                )
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(R.string.label_status_format, playerData.playerStatus)
+                )
             }
         }
     }
