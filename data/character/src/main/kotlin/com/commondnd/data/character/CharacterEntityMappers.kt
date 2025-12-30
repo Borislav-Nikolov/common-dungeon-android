@@ -9,8 +9,9 @@ fun PlayerCharacter.toEntity(playerId: String): PlayerCharacterEntity = PlayerCh
     characterName = characterName,
     characterLevel = characterLevel,
     sessionsOnThisLevel = sessionsOnThisLevel,
+    maxLevel = maxLevel,
     lastDm = lastDm,
-    status = status
+    status = status.name
 )
 
 fun CharacterClass.toEntity(characterId: Long): CharacterClassEntity = CharacterClassEntity(
@@ -24,8 +25,9 @@ fun PlayerCharacterWithClasses.toDomain(): PlayerCharacter = PlayerCharacter(
     characterName = character.characterName,
     characterLevel = character.characterLevel,
     sessionsOnThisLevel = character.sessionsOnThisLevel,
+    maxLevel = character.maxLevel,
     lastDm = character.lastDm,
-    status = character.status,
+    status = CharacterStatus.valueOf(character.status),
     classes = classes.map { it.toDomain() }
 )
 

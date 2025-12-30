@@ -57,7 +57,7 @@ fun ExpandableCard(
     isExpanded: Boolean,
     onExpand: () -> Unit,
     onCollapse: () -> Unit,
-    headerContent: @Composable RowScope.() -> Unit,
+    headerContent: @Composable BoxScope.() -> Unit,
     expandedContent: @Composable BoxScope.() -> Unit
 ) {
     Card(modifier = modifier) {
@@ -66,7 +66,11 @@ fun ExpandableCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            headerContent()
+            Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                headerContent()
+            }
             IconButton(
                 onClick = {
                     if (isExpanded) {
@@ -100,7 +104,7 @@ interface ExpandableCardSection {
     val id: Any
 
     @Composable
-    fun RowScope.SectionHeader()
+    fun BoxScope.SectionHeader()
 
     @Composable
     fun BoxScope.SectionContent()
@@ -109,13 +113,13 @@ interface ExpandableCardSection {
 
         operator fun invoke(
             id: Any,
-            header: @Composable RowScope.() -> Unit,
+            header: @Composable BoxScope.() -> Unit,
             content: @Composable BoxScope.() -> Unit
         ): ExpandableCardSection = object : ExpandableCardSection {
             override val id: Any = id
 
             @Composable
-            override fun RowScope.SectionHeader() {
+            override fun BoxScope.SectionHeader() {
                 header()
             }
 

@@ -18,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ExperienceBar(
     modifier: Modifier = Modifier,
+    isAtMax: Boolean = false,
     currentProgress: Int,
     maxProgress: Int
 ) {
@@ -43,7 +45,7 @@ fun ExperienceBar(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.onBackground
                 ),
-            progress = { currentProgress.toFloat() / maxProgress },
+            progress = { if (isAtMax) 1f else currentProgress.toFloat() / maxProgress },
             gapSize = 0.dp,
             strokeCap = StrokeCap.Square,
             drawStopIndicator = {}
@@ -56,7 +58,7 @@ fun ExperienceBar(
                 progressHeight = heightDp
             },
             style = MaterialTheme.typography.labelSmall,
-            text = "$currentProgress / $maxProgress",
+            text = "$currentProgress / ${if (isAtMax) "∞" else maxProgress}",
             color = MaterialTheme.colorScheme.onPrimary
         )
     }

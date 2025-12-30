@@ -136,7 +136,10 @@ private fun PlayerInfoRow(
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
                 style = MaterialTheme.typography.titleMedium,
-                text = stringResource(R.string.label_level_format, playerData.playerLevel)
+                text = stringResource(
+                    com.commondnd.ui.core.R.string.label_level_format,
+                    playerData.playerLevel
+                )
             )
             ExperienceBar(
                 currentProgress = playerData.sessionsOnThisLevel,
