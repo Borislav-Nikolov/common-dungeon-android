@@ -17,5 +17,6 @@ dependencies {
     implementation(projects.data.player)
 
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.icons)
     implementation(libs.androidx.hilt.navigation.compose)
 }

@@ -6,7 +6,6 @@
     <string name="rare_tokens">Rare tokens</string>
     <string name="very_rare_tokens">Very rare tokens</string>
     <string name="legendary_tokens">Legendary tokens</string>
-    <string name="label_status_format">Status: %s</string>
     <string name="label_role_format">Role: %s</string>
     <string name="label_tokens">Tokens</string>
     <string name="content_description_exchange_tokens">Exchange tokens</string>

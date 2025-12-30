@@ -10,7 +10,13 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = CharacterStatusSerializer::class)
 enum class CharacterStatus {
-    Active, Inactive, Dead
+    Active, Inactive, Dead;
+
+    companion object {
+
+        fun fromString(value: String): CharacterStatus =
+            CharacterStatus.entries.first { it.name.equals(value, ignoreCase = true) }
+    }
 }
 
 object CharacterStatusSerializer : KSerializer<CharacterStatus> {
@@ -21,8 +27,6 @@ object CharacterStatusSerializer : KSerializer<CharacterStatus> {
         encoder.encodeString(value.name)
     }
 
-    override fun deserialize(decoder: Decoder): CharacterStatus {
-        val value = decoder.decodeString()
-        return CharacterStatus.entries.first { it.name.equals(value, ignoreCase = true) }
-    }
+    override fun deserialize(decoder: Decoder): CharacterStatus =
+        CharacterStatus.fromString(decoder.decodeString())
 }

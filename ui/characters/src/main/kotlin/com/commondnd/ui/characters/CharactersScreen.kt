@@ -1,7 +1,6 @@
 package com.commondnd.ui.characters
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,8 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,14 +31,14 @@ import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.player.Player
 import com.commondnd.ui.core.ExpandableCard
 import com.commondnd.ui.core.ExperienceBar
-import com.commondnd.ui.core.R
 import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.tierColor
 
 @Composable
 fun CharactersScreen(
     modifier: Modifier = Modifier,
-    player: Player
+    player: Player,
+    onSettings: () -> Unit
 ) {
     player.characters?.let { characters ->
         val expandedSections = remember { mutableStateSetOf<String>() }
@@ -85,19 +86,54 @@ fun CharactersScreen(
                         Column(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                style = MaterialTheme.typography.titleMedium,
-                                text = stringResource(R.string.label_level_format, character.characterLevel)
-                            )
-                            Text(
-                                style = MaterialTheme.typography.bodyMedium,
-                                text = character.classes.joinToString(separator = " • ") { "${it.className} ${it.level}" }
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        style = MaterialTheme.typography.titleMedium,
+                                        text = "${stringResource(com.commondnd.ui.core.R.string.label_level_format, character.characterLevel)} / ${character.maxLevel}"
+                                    )
+                                    Text(
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        text = character.classes.joinToString(separator = " • ") { "${it.className} ${it.level}" }
+                                    )
+                                }
+                                IconButton(
+                                    modifier = Modifier.padding(start = 4.dp),
+                                    onClick = onSettings
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Settings,
+                                        contentDescription = stringResource(R.string.content_description_change_status)
+                                    )
+                                }
+                            }
                             ExperienceBar(
+                                modifier = Modifier.padding(top = 8.dp, bottom = 12.dp),
                                 isAtMax = character.maxLevel == character.characterLevel,
                                 currentProgress = character.sessionsOnThisLevel,
                                 maxProgress = character.sessionsToNextLevel
                             )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    text = stringResource(
+                                        com.commondnd.ui.core.R.string.label_status_format,
+                                        character.status
+                                    )
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    text = stringResource(R.string.last_dm_format, character.lastDm),
+                                )
+                            }
                         }
                     }
                 )
@@ -109,7 +145,7 @@ fun CharactersScreen(
 @Composable
 private fun PlayerCharacter.getIcon(): Painter = DndClass.fromString(
     classes.first { it.isPrimary }.className
-)?.icon ?: painterResource(R.drawable.logo_bright_dawn_color)
+)?.icon ?: painterResource(com.commondnd.ui.core.R.drawable.logo_bright_dawn_color)
 
 private val PlayerCharacter.sessionsToNextLevel: Int
     get() = when {

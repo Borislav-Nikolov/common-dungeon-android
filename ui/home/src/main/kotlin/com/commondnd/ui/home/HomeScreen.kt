@@ -157,7 +157,7 @@ private fun PlayerInfoRow(
                 Text(
                     modifier = Modifier.padding(start = 8.dp),
                     style = MaterialTheme.typography.bodyMedium,
-                    text = stringResource(R.string.label_status_format, playerData.playerStatus)
+                    text = stringResource(com.commondnd.ui.core.R.string.label_status_format, playerData.playerStatus)
                 )
             }
         }

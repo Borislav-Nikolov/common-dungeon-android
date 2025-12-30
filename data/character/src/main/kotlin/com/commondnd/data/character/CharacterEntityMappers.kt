@@ -3,6 +3,7 @@ package com.commondnd.data.character
 import com.commondnd.data.storage.CharacterClassEntity
 import com.commondnd.data.storage.PlayerCharacterEntity
 import com.commondnd.data.storage.PlayerCharacterWithClasses
+import kotlinx.serialization.serializer
 
 fun PlayerCharacter.toEntity(playerId: String): PlayerCharacterEntity = PlayerCharacterEntity(
     playerId = playerId,
@@ -27,7 +28,7 @@ fun PlayerCharacterWithClasses.toDomain(): PlayerCharacter = PlayerCharacter(
     sessionsOnThisLevel = character.sessionsOnThisLevel,
     maxLevel = character.maxLevel,
     lastDm = character.lastDm,
-    status = CharacterStatus.valueOf(character.status),
+    status = CharacterStatus.fromString(character.status),
     classes = classes.map { it.toDomain() }
 )
 

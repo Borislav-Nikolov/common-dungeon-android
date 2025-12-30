@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_characters">Characters</string>
+    <string name="last_dm_format">Last DM: %s</string>
+    <string name="content_description_change_status">Change status</string>
 </resources>
