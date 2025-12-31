@@ -35,12 +35,7 @@ fun NavGraphRegistry.registerCharactersScreens() {
                     )
                 }
                 is State.Loaded<Player> -> {
-                    CharactersScreen(
-                        player = state.value,
-                        onSettings = {
-
-                        }
-                    )
+                    CharactersScreen(player = state.value)
                 }
                 is State.Loading<*>,
                 is State.None<*> -> BrightDawnLoading()

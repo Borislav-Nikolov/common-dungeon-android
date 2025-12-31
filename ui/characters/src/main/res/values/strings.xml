@@ -3,4 +3,6 @@
     <string name="label_characters">Characters</string>
     <string name="last_dm_format">Last DM: %s</string>
     <string name="content_description_change_status">Change status</string>
+    <string name="label_change_status">Change status</string>
+    <string name="title_characters_could_not_be_loaded">Could not load characters</string>
 </resources>
