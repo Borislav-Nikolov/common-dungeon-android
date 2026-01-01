@@ -15,6 +15,7 @@ import com.commondnd.ui.navigation.NavGraphRegistry
 object HomeScreen {
 
     const val Home = "Home"
+    const val ExchangeTokens = "ExchangeTokens"
 }
 
 fun NavGraphRegistry.registerHomeScreens() {
@@ -34,24 +35,25 @@ fun NavGraphRegistry.registerHomeScreens() {
                 }
 
                 is State.Loaded -> {
-                    val context = LocalContext.current
                     HomeScreen(
                         user = (userState as? State.Loaded)?.value,
                         playerData = state.value,
                         onExchangeTokens = {
-                            Toast.makeText(
-                                context,
-                                "Exchange tokens it not yet implemented.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            navController.push(HomeScreen.ExchangeTokens)
                         }
                     )
                 }
 
                 is State.Loading,
                 is State.None -> BrightDawnLoading()
-
             }
+        }
+    )
+
+    register(
+        key = HomeScreen.ExchangeTokens,
+        content = { _, navController ->
+
         }
     )
 }

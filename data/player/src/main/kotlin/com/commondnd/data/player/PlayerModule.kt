@@ -20,6 +20,10 @@ internal abstract class PlayerModule {
 
     @Binds
     @Singleton
+    abstract fun bindsPlayerRemoteOperations(impl: PlayerRemoteOperationsImpl): PlayerRemoteOperations
+
+    @Binds
+    @Singleton
     abstract fun bindsPlayerLocalSource(impl: PlayerLocalSourceImpl): PlayerLocalSource
 
     @Binds

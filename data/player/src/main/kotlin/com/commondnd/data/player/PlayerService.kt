@@ -1,5 +1,6 @@
 package com.commondnd.data.player
 
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,4 +11,16 @@ interface PlayerService {
         @Query("include_inventory") includeInventory: Boolean = false,
         @Query("include_characters") includeCharacters: Boolean = false
     ): Player
+
+    @GET("calculate_token_conversion")
+    suspend fun calculateTokenConversion(
+        @Query("from_rarity") fromRarity: String,
+        @Query("to_rarity") toRarity: String,
+        @Query("value") value: Int
+    ): TokenConversionResult
+
+    @GET("do_token_conversion")
+    suspend fun doTokenConversion(
+        @Body data: DoTokenConversionRequestData
+    )
 }
