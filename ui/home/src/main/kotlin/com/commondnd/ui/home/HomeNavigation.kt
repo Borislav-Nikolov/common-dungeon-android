@@ -2,9 +2,12 @@ package com.commondnd.ui.home
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.data.core.State
@@ -36,6 +39,7 @@ fun NavGraphRegistry.registerHomeScreens() {
 
                 is State.Loaded -> {
                     HomeScreen(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
                         user = (userState as? State.Loaded)?.value,
                         playerData = state.value,
                         onExchangeTokens = {
@@ -53,7 +57,7 @@ fun NavGraphRegistry.registerHomeScreens() {
     register(
         key = HomeScreen.ExchangeTokens,
         content = { _, navController ->
-
+            val viewModel: ExchangeTokensViewModel = hiltViewModel()
         }
     )
 }

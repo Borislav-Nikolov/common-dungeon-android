@@ -82,6 +82,9 @@ class MainActivity : AppCompatActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize(),
+                    topBar = {
+                       // TODO: show no internet when no internet
+                    },
                     content = { contentPadding ->
                         Surface(
                             modifier = Modifier
