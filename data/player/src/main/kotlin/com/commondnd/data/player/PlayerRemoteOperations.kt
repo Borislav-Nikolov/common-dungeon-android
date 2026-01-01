@@ -28,8 +28,8 @@ internal class PlayerRemoteOperationsImpl @Inject constructor(
         value: Int
     ): TokenConversionResult {
         return playerService.calculateTokenConversion(
-            fromRarity = from.value,
-            toRarity = to.value,
+            fromRarity = from.name,
+            toRarity = to.name,
             value = value
         )
     }

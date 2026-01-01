@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TokenConversionResult(
-    @SerialName("subtracter")
+    @SerialName("subtracted")
     val subtracted: Int,
     @SerialName("added")
     val added: Int

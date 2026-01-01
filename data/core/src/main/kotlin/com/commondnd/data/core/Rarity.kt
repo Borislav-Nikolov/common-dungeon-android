@@ -9,15 +9,29 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = RaritySerializer::class)
-enum class Rarity(
-    val value: String
-) {
+enum class Rarity {
 
-    Common("Common"),
-    Uncommon("Uncommon"),
-    Rare("Rare"),
-    VeryRare("Very Rare"),
-    Legendary("Legendary");
+    Common,
+    Uncommon,
+    Rare,
+    VeryRare,
+    Legendary;
+
+    fun getAllLesser(): List<Rarity> = when (this) {
+        Common -> emptyList()
+        Uncommon -> listOf(Common)
+        Rare -> listOf(Common, Uncommon)
+        VeryRare -> listOf(Common, Uncommon, Rare)
+        Legendary -> listOf(Common, Uncommon, Rare, VeryRare)
+    }
+
+    fun getAllGreater(): List<Rarity> = when (this) {
+        Common -> listOf(Uncommon, Rare, VeryRare, Legendary)
+        Uncommon -> listOf(Rare, VeryRare, Legendary)
+        Rare -> listOf(VeryRare, Legendary)
+        VeryRare -> listOf(Legendary)
+        Legendary -> emptyList()
+    }
 
     companion object {
 
