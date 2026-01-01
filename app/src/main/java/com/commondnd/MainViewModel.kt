@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,12 +37,26 @@ class MainViewModel @Inject constructor(
         initialValue = null
     )
 
+    val hasBottomNavigation: StateFlow<Boolean> = navController.currentBackStack.map {
+        when(it?.lastOrNull()) {
+            HomeScreen.Home,
+            CharactersScreen.Characters,
+            InventoryScreen.Inventory,
+            MoreScreen.More -> true
+            else -> false
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
+
     init {
         push(CommonNavigationGroup.Blank, CommonNavigationGroup.Blank.groupInitialScreen)
         viewModelScope.launch {
             user.collectLatest {
                 makeCurrent(
-                    if (it != null) {
+                    if (it != null || userRepository.getAsync() != null) {
                         CommonNavigationGroup.UserScoped.Home
                     } else {
                         CommonNavigationGroup.NoUser

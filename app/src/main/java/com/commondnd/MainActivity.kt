@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         )
         setContent {
             CommonDungeonMaterialTheme(darkTheme = darkTheme) {
-                val user by mainViewModel.user.collectAsState()
+                val hasBottomNavigation by mainViewModel.hasBottomNavigation.collectAsState()
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
                     modifier = Modifier
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     },
                     bottomBar = {
-                        AnimatedVisibility(user != null) {
+                        AnimatedVisibility(hasBottomNavigation) {
                             NavigationBar {
                                 mainViewModel.navigationTabs.forEach {
                                     NavigationBarItem(
