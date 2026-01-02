@@ -66,22 +66,16 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     override suspend fun doTokenConversion(from: Rarity, to: Rarity, value: Int): Boolean {
         try {
-            Log.d("asldkasfaf", "start token conversion")
             playerRemoteOperations.doTokenConversion(
                 from = from,
                 to = to,
                 value = value
-            ).let {
-                Log.d("asldkasfaf", "response.message=${it.message}")
-            }
-            Log.d("asldkasfaf", "synchronize")
+            )
             synchronize()
             return true
         } catch (cancellation: CancellationException) {
-            Log.d("asldkasfaf", "cancellation exception")
             throw cancellation
-        } catch (e: Exception) {
-            Log.d("asldkasfaf", "exception=$e")
+        } catch (_: Exception) {
             return false
         }
     }

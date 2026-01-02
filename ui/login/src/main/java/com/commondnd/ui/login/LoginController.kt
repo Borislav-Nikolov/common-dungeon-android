@@ -66,7 +66,6 @@ internal class LoginControllerImpl @Inject constructor(
                     coroutineScope.launch {
                         try {
                             val loginStartedState = _currentState.value as LoginState.LoginStarted
-                            Log.d("sadljaslfdjaslkdfj", "userRepository.login")
                             userRepository.login(
                                 UserAuthData(
                                     code = requireNotNull(code),
@@ -81,7 +80,6 @@ internal class LoginControllerImpl @Inject constructor(
                         } catch (cancellation: CancellationException) {
                             throw cancellation
                         } catch (expected: Exception) {
-                            Log.d("sadljaslfdjaslkdfj", "expected: $expected")
                             _currentState.update {
                                 require(it is LoginState.LoginStarted)
                                 LoginState.LoginError(error = expected)
