@@ -10,17 +10,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.auth.AuthTabIntent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.commondnd.ui.characters.registerCharactersScreens
 import com.commondnd.ui.home.registerHomeScreens
@@ -80,10 +83,10 @@ class MainActivity : AppCompatActivity() {
                 val hasBottomNavigation by mainViewModel.hasBottomNavigation.collectAsState()
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = if (hasBottomNavigation) ScaffoldDefaults.contentWindowInsets else WindowInsets.statusBars,
                     topBar = {
-                       // TODO: show no internet when no internet
+                        // TODO: show no internet when no internet
                     },
                     content = { contentPadding ->
                         Surface(

@@ -38,7 +38,6 @@ class MainViewModel @Inject constructor(
     )
 
     val hasBottomNavigation: StateFlow<Boolean> = navController.currentBackStack.map {
-        Log.d("dlkfjdlafjkasd", "currentBackStack=$it")
         when(it?.lastOrNull()) {
             HomeScreen.Home,
             CharactersScreen.Characters,

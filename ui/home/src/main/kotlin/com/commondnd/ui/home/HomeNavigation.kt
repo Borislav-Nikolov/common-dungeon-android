@@ -1,38 +1,18 @@
 package com.commondnd.ui.home
 
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
 import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.core.ErrorScreen
-import com.commondnd.ui.core.label
 import com.commondnd.ui.navigation.NavGraphRegistry
-import kotlin.math.exp
 
 object HomeScreen {
 
@@ -87,9 +67,7 @@ fun NavGraphRegistry.registerHomeScreens() {
                 }
                 is State.Loaded<Player> -> {
                     ExchangeTokensScreen(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState()),
+                        modifier = Modifier.fillMaxWidth(),
                         player = state.value,
                         calculationState = calculationState,
                         conversionState = conversionState,
@@ -106,6 +84,9 @@ fun NavGraphRegistry.registerHomeScreens() {
                                 to = to,
                                 value = value
                             )
+                        },
+                        onBack = {
+                            navController.pop()
                         }
                     )
                 }

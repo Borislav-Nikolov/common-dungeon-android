@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.entryProvider
@@ -12,6 +13,7 @@ import androidx.navigation3.ui.NavDisplay
 
 @Composable
 fun CommonDungeonNavDisplay(
+    modifier: Modifier = Modifier,
     groupedNavController: GroupedNavController,
     registry: NavGraphRegistry.() -> Unit
 ) {
@@ -20,6 +22,7 @@ fun CommonDungeonNavDisplay(
         val registry = rememberNavRegistry()
         val provider = rememberNavProvider()
         NavDisplay(
+            modifier = modifier,
             entryDecorators = listOf(
                 // Add the default decorators for managing scenes and saving state
                 rememberSaveableStateHolderNavEntryDecorator(),
