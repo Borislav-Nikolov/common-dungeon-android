@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -54,13 +55,13 @@ fun ExchangeTokensScreen(
     doTokenConversion: (from: Rarity, to: Rarity, value: Int) -> Unit,
     onBack: () -> Unit
 ) {
-    var fromSelected: Rarity by remember {
+    var fromSelected: Rarity by rememberSaveable {
         mutableStateOf(Rarity.Uncommon)
     }
-    var toSelected: Rarity by remember {
+    var toSelected: Rarity by rememberSaveable {
         mutableStateOf(Rarity.Common)
     }
-    var value: String by remember { mutableStateOf("1") }
+    var value: String by rememberSaveable { mutableStateOf("") }
     val fromOptions = remember(toSelected) {
         toSelected.getAllGreater()
     }
@@ -148,20 +149,24 @@ fun ExchangeTokensScreen(
                 },
                 onValueChange = {
                     val numberValue = it.toIntOrNull()
-                    if (numberValue != null && numberValue > 0) {
+                    val isValid = numberValue != null && numberValue > 0
+                    if (isValid || it.isEmpty()) {
                         value = it
-                        calculateTokenConversion(
-                            fromSelected,
-                            toSelected,
-                            numberValue
-                        )
+                        if (isValid) {
+                            // TODO: do after a short delay to avoid spamming the backend when fast typing
+                            calculateTokenConversion(
+                                fromSelected,
+                                toSelected,
+                                numberValue
+                            )
+                        }
                     }
                 }
             )
             Text(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                 style = MaterialTheme.typography.titleMedium,
-                text = "${stringResource(R.string.title_token_conversion_result)}:"
+                text = "${stringResource(R.string.title_token_conversion_calculation)}:"
             )
             Text(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
@@ -192,7 +197,7 @@ fun ExchangeTokensScreen(
                         value.toInt()
                     )
                 },
-                enabled = conversionState !is State.Loading
+                enabled = conversionState !is State.Loading && value.toIntOrNull() != null
             ) {
                 Text(text = stringResource(R.string.label_convert))
             }

@@ -13,7 +13,7 @@
     <string name="label_to">To</string>
     <string name="token_subtraction_result_format">%s tokens to be subtracted: %s</string>
     <string name="token_addition_result_format">%s tokens to be added: %s</string>
-    <string name="title_token_conversion_result">Conversion result</string>
+    <string name="title_token_conversion_calculation">Conversion calculation</string>
     <string name="label_convert">Convert</string>
     <string name="title_convert_tokens">Convert Tokens</string>
 </resources>
