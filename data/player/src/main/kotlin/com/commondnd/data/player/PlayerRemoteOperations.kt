@@ -1,6 +1,7 @@
 package com.commondnd.data.player
 
 import com.commondnd.data.core.Rarity
+import com.commondnd.data.networking.MessageResponse
 import javax.inject.Inject
 
 interface PlayerRemoteOperations {
@@ -15,7 +16,7 @@ interface PlayerRemoteOperations {
         from: Rarity,
         to: Rarity,
         value: Int
-    )
+    ): MessageResponse
 }
 
 internal class PlayerRemoteOperationsImpl @Inject constructor(
@@ -38,8 +39,8 @@ internal class PlayerRemoteOperationsImpl @Inject constructor(
         from: Rarity,
         to: Rarity,
         value: Int
-    ) {
-        playerService.doTokenConversion(
+    ): MessageResponse {
+        return playerService.doTokenConversion(
             data = DoTokenConversionRequestData(
                 fromRarity = from,
                 toRarity = to,

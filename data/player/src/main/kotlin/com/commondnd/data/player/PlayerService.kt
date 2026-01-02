@@ -1,7 +1,9 @@
 package com.commondnd.data.player
 
+import com.commondnd.data.networking.MessageResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface PlayerService {
@@ -19,8 +21,8 @@ interface PlayerService {
         @Query("value") value: Int
     ): TokenConversionResult
 
-    @GET("do_token_conversion")
+    @POST("do_token_conversion")
     suspend fun doTokenConversion(
         @Body data: DoTokenConversionRequestData
-    )
+    ): MessageResponse
 }

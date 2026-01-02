@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.State
+import com.commondnd.data.player.Player
 import com.commondnd.data.player.TokenConversionResult
 import com.commondnd.ui.core.label
 
@@ -28,9 +31,11 @@ import com.commondnd.ui.core.label
 @Composable
 fun ExchangeTokensScreen(
     modifier: Modifier = Modifier,
+    player: Player,
     calculationState: State<TokenConversionResult>,
     conversionState: State<Unit>,
-    calculateTokenConversion: (from: Rarity, to: Rarity, value: Int) -> Unit
+    calculateTokenConversion: (from: Rarity, to: Rarity, value: Int) -> Unit,
+    doTokenConversion: (from: Rarity, to: Rarity, value: Int) -> Unit
 ) {
     var fromSelected: Rarity by remember {
         mutableStateOf(Rarity.Uncommon)
@@ -38,9 +43,7 @@ fun ExchangeTokensScreen(
     var toSelected: Rarity by remember {
         mutableStateOf(Rarity.Common)
     }
-    var value: String by remember {
-        mutableStateOf("1") // TODO: permit only positive numbers in field
-    }
+    var value: String by remember { mutableStateOf("1") }
     val fromOptions = remember(toSelected) {
         toSelected.getAllGreater()
     }
@@ -96,6 +99,40 @@ fun ExchangeTokensScreen(
                     )
                 }
             }
+        )
+        Text(
+            style = MaterialTheme.typography.titleMedium,
+            text = "${stringResource(R.string.title_token_conversion_result)}:"
+        )
+        Text(
+            style = MaterialTheme.typography.bodyMedium,
+            text = when (val state = calculationState) {
+                is State.Loaded<TokenConversionResult> -> stringResource(R.string.token_subtraction_result_format, fromSelected.label, state.value.subtracted)
+                else -> "..."
+            }
+        )
+        Text(
+            style = MaterialTheme.typography.bodyMedium,
+            text = when (val state = calculationState) {
+                is State.Loaded<TokenConversionResult> -> stringResource(R.string.token_addition_result_format, toSelected.label, state.value.added)
+                else -> "..."
+            }
+        )
+        Button(
+            onClick = {
+                doTokenConversion(
+                    fromSelected,
+                    toSelected,
+                    value.toInt()
+                )
+            },
+            enabled = conversionState !is State.Loading
+        ) {
+            Text(text = stringResource(R.string.label_do_conversion))
+        }
+        TokensCard(
+            modifier = Modifier.fillMaxWidth(),
+            playerData = player
         )
     }
 }

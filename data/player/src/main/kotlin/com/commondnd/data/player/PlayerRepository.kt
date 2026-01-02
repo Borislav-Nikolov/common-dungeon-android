@@ -1,5 +1,6 @@
 package com.commondnd.data.player
 
+import android.util.Log
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.Synchronizable
 import com.commondnd.data.user.UserRepository
@@ -65,22 +66,28 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     override suspend fun doTokenConversion(from: Rarity, to: Rarity, value: Int): Boolean {
         try {
+            Log.d("asldkasfaf", "start token conversion")
             playerRemoteOperations.doTokenConversion(
                 from = from,
                 to = to,
                 value = value
-            )
+            ).let {
+                Log.d("asldkasfaf", "response.message=${it.message}")
+            }
+            Log.d("asldkasfaf", "synchronize")
             synchronize()
             return true
         } catch (cancellation: CancellationException) {
+            Log.d("asldkasfaf", "cancellation exception")
             throw cancellation
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d("asldkasfaf", "exception=$e")
             return false
         }
     }
 
     override suspend fun synchronize(): Boolean {
-        userRepository.getUser()?.id?.let { init(it) }
+        userRepository.getUser()?.id?.let { init(it, forceRefresh = true) }
         return true
     }
 
@@ -91,16 +98,16 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     private suspend fun initIfNeeded() {
         if (ownPlayerData.value == null) {
-            init(requireNotNull(userRepository.getUser()).id)
+            init(requireNotNull(userRepository.getUser()).id, forceRefresh = false)
         }
     }
 
-    private suspend fun init(playerId: String) {
-        ownPlayerData.update { getPlayer(playerId) }
+    private suspend fun init(playerId: String, forceRefresh: Boolean) {
+        ownPlayerData.update { getPlayer(playerId, forceRefresh) }
     }
 
-    private suspend fun getPlayer(playerId: String): Player {
-        var player: Player? = playerLocalSource.getPlayer(playerId)
+    private suspend fun getPlayer(playerId: String, forceRefresh: Boolean): Player {
+        var player: Player? = if (forceRefresh) null else playerLocalSource.getPlayer(playerId)
         if (player == null) {
             player = playerRemoteSource.getOwnPlayerData(
                 includeInventory = true,

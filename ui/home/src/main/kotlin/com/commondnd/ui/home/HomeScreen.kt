@@ -63,61 +63,6 @@ fun HomeScreen(
 }
 
 @Composable
-private fun TokensCard(
-    modifier: Modifier = Modifier,
-    onExchangeTokens: () -> Unit,
-    playerData: Player
-) {
-    Card(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.titleMedium,
-                text = stringResource(R.string.label_tokens)
-            )
-            IconButton(
-                onClick = onExchangeTokens
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.CurrencyExchange,
-                    contentDescription = stringResource(R.string.content_description_exchange_tokens)
-                )
-            }
-        }
-        repeat(5) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Token,
-                    contentDescription = null,
-                    tint = it.tokenColor
-                )
-                Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp),
-                    text = "${it.tokenText}:",
-                )
-                Text(
-                    text = it.tokenCount(playerData).toString()
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun PlayerInfoRow(
     modifier: Modifier = Modifier,
     user: User?,
@@ -162,35 +107,4 @@ private fun PlayerInfoRow(
             }
         }
     }
-}
-
-private val Int.tokenColor: Color
-    get() = when (this) {
-        0 -> commonTokenColor
-        1 -> uncommonTokenColor
-        2 -> rareTokenColor
-        3 -> veryRareTokenColor
-        4 -> legendaryTokenColor
-        else -> throw IllegalArgumentException()
-    }
-
-private val Int.tokenText: String
-    @Composable get() = stringResource(
-        when (this) {
-            0 -> R.string.common_tokens
-            1 -> R.string.uncommon_tokens
-            2 -> R.string.rare_tokens
-            3 -> R.string.very_rare_tokens
-            4 -> R.string.legendary_tokens
-            else -> throw IllegalArgumentException()
-        }
-    )
-
-private fun Int.tokenCount(player: Player) = when (this) {
-    0 -> player.commonTokens
-    1 -> player.uncommonTokens
-    2 -> player.rareTokens
-    3 -> player.veryRareTokens
-    4 -> player.legendaryTokens
-    else -> throw IllegalArgumentException()
 }
