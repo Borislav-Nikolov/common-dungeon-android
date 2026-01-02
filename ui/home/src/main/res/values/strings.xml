@@ -9,4 +9,8 @@
     <string name="label_role_format">Role: %s</string>
     <string name="label_tokens">Tokens</string>
     <string name="content_description_exchange_tokens">Exchange tokens</string>
+    <string name="label_from">From</string>
+    <string name="label_to">To</string>
+    <string name="token_subtraction_result_format">%s tokens to be subtracted: %d</string>
+    <string name="token_addition_result_format">%s tokens to be added: %d</string>
 </resources>

@@ -23,11 +23,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.State
 import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.core.ErrorScreen
+import com.commondnd.ui.core.label
 import com.commondnd.ui.navigation.NavGraphRegistry
 import kotlin.math.exp
 
@@ -76,69 +78,21 @@ fun NavGraphRegistry.registerHomeScreens() {
         content = { _, navController ->
             val viewModel: ExchangeTokensViewModel = hiltViewModel()
             val calculationState by viewModel.calculationResult.collectAsState()
-            Log.d("saldkjasdlkja", "calculationState=$calculationState")
             val conversionState by viewModel.conversionResult.collectAsState()
-            var fromSelected: Rarity by remember {
-                mutableStateOf(Rarity.Uncommon)
-            }
-            var toSelected: Rarity by remember {
-                mutableStateOf(Rarity.Common)
-            }
-            var value: String by remember {
-                mutableStateOf("1") // TODO: permit only positive numbers in field
-            }
-            val fromOptions = remember(toSelected) {
-                toSelected.getAllGreater()
-            }
-            val toOptions = remember(fromSelected) {
-                fromSelected.getAllLesser()
-            }
-            Column(
+            ExchangeTokensScreen(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    var expanded by remember { mutableStateOf(false) }
-                    Text(
-                        text = "From:"
+                    .verticalScroll(rememberScrollState()),
+                calculationState = calculationState,
+                conversionState = conversionState,
+                calculateTokenConversion = { from, to, value ->
+                    viewModel.calculateTokenConversion(
+                        from = from,
+                        to = to,
+                        value = value
                     )
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = it }
-                    ) {
-                        TextField(
-                            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                            value = fromSelected.name,
-                            readOnly = true,
-                            onValueChange = {},
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
-                        )
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            fromOptions.forEach { option ->
-                                DropdownMenuItem(
-                                    text = { Text(option.name /* TODO: use string resources */) },
-                                    onClick = {
-                                        fromSelected = option
-                                        expanded = false
-                                        viewModel.calculateTokenConversion(
-                                            from = fromSelected,
-                                            to = toSelected,
-                                            value = value.toInt()
-                                        )
-                                    },
-                                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                                )
-                            }
-                        }
-                    }
                 }
-            }
+            )
         }
     )
 }

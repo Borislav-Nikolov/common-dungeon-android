@@ -8,4 +8,9 @@
     <string name="label_action_back">Back</string>
     <string name="label_level_format">Level %s</string>
     <string name="label_status_format">Status: %s</string>
+    <string name="label_uncommon">Uncommon</string>
+    <string name="label_common">Common</string>
+    <string name="label_rare">Rare</string>
+    <string name="label_very_rare">Very rare</string>
+    <string name="label_legendary">Legendary</string>
 </resources>
