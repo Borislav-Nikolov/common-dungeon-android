@@ -1,9 +1,11 @@
 package com.commondnd.ui.characters
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,18 +28,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.commondnd.data.character.CharacterStatus
 import com.commondnd.data.character.DndClass
 import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.player.Player
 import com.commondnd.ui.core.BottomSheetDataState
+import com.commondnd.ui.core.BottomSheetOption
+import com.commondnd.ui.core.BottomSheetOptionRow
 import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.core.ErrorSpec
 import com.commondnd.ui.core.ExpandableCard
 import com.commondnd.ui.core.ExperienceBar
+import com.commondnd.ui.core.SettingsBottomSheet
 import com.commondnd.ui.core.StatefulBottomSheet
 import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.rememberBottomSheetDataState
@@ -47,7 +54,8 @@ import com.commondnd.ui.core.tierColor
 @Composable
 fun CharactersScreen(
     modifier: Modifier = Modifier,
-    player: Player
+    player: Player,
+    onChangeStatus: (CharacterStatus, PlayerCharacter) -> Unit
 ) {
     if (player.characters != null) {
         val sheetDataState = rememberBottomSheetDataState<PlayerCharacter>()
@@ -56,7 +64,19 @@ fun CharactersScreen(
             characters = player.characters!!,
             onSettingsClick = { sheetDataState.data = it },
         )
-        CharacterSettingsBottomSheet(sheetDataState = sheetDataState)
+        val testContext = LocalContext.current
+        CharacterSettingsBottomSheet(
+            sheetDataState = sheetDataState,
+            options = CharacterOption.entries,
+            onOption = { option, character ->
+                when (option) {
+                    CharacterOption.ChangeStatus -> {
+                        Toast.makeText(testContext, "Clicked on option $option for character ${character.characterName}",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        )
     } else {
         ErrorScreen(
             errorSpec = ErrorSpec(
@@ -219,36 +239,42 @@ private fun CharacterRowHeader(character: PlayerCharacter) {
     }
 }
 
+private enum class CharacterOption : BottomSheetOption<CharacterOption> {
+
+    ChangeStatus;
+
+    override fun content(
+        onOption: (CharacterOption) -> Unit
+    ): @Composable () -> Unit = when (this) {
+        ChangeStatus -> {
+            {
+                BottomSheetOptionRow(
+                    option = this,
+                    imageVector = Icons.AutoMirrored.Rounded.CompareArrows,
+                    label = stringResource(R.string.label_change_status),
+                    onOption = onOption
+                )
+            }
+        }
+    }
+}
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterSettingsBottomSheet(
     modifier: Modifier = Modifier,
-    sheetDataState: BottomSheetDataState<PlayerCharacter>
+    sheetDataState: BottomSheetDataState<PlayerCharacter>,
+    options: List<CharacterOption>,
+    onOption: (CharacterOption, PlayerCharacter) -> Unit
 ) {
-    StatefulBottomSheet(
+    SettingsBottomSheet(
         modifier = modifier,
-        onDismissRequest = { sheetDataState.data = null },
-        sheetDataState = sheetDataState
-    ) { character: PlayerCharacter? ->
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = {
-                    // TODO:
-                }),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier.padding(16.dp),
-                imageVector = Icons.AutoMirrored.Rounded.CompareArrows,
-                contentDescription = null
-            )
-            Text(
-                style = MaterialTheme.typography.labelLarge,
-                text = stringResource(R.string.label_change_status)
-            )
-        }
-    }
+        sheetDataState = sheetDataState,
+        options = options,
+        onOption = onOption
+    )
 }
 
 @Composable

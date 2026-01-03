@@ -1,12 +1,21 @@
 package com.commondnd.ui.core
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.CompareArrows
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -15,11 +24,70 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.commondnd.data.character.PlayerCharacter
+import kotlin.collections.forEach
+
+@Composable
+fun <O : BottomSheetOption<O>> BottomSheetOptionRow(
+    modifier: Modifier = Modifier,
+    option: O,
+    imageVector: ImageVector,
+    label: String,
+    onOption: (O) -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = { onOption(option) }),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.padding(16.dp),
+            imageVector = imageVector,
+            contentDescription = null
+        )
+        Text(
+            style = MaterialTheme.typography.labelLarge,
+            text = label
+        )
+    }
+}
+
+interface BottomSheetOption<O : BottomSheetOption<O>> {
+
+    fun content(
+        onOption: (O) -> Unit
+    ): @Composable () -> Unit
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T, O : BottomSheetOption<O>> SettingsBottomSheet(
+    modifier: Modifier = Modifier,
+    sheetDataState: BottomSheetDataState<T>,
+    options: List<O>,
+    onOption: (O, T) -> Unit
+) {
+    StatefulBottomSheet(
+        modifier = modifier,
+        onDismissRequest = { sheetDataState.data = null },
+        sheetDataState = sheetDataState
+    ) { dataItem: T? ->
+        dataItem?.let {
+            options.forEach {
+                it.content { option -> onOption(option, dataItem) }.invoke()
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
