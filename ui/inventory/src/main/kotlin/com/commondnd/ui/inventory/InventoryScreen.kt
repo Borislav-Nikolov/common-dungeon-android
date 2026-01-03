@@ -1,6 +1,7 @@
 package com.commondnd.ui.inventory
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.Sell
@@ -26,16 +28,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.item.InventoryItem
 import com.commondnd.data.player.Player
 import com.commondnd.ui.core.BottomSheetDataState
+import com.commondnd.ui.core.BottomSheetOption
+import com.commondnd.ui.core.BottomSheetOptionRow
 import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.core.ErrorSpec
 import com.commondnd.ui.core.ExpandableCard
+import com.commondnd.ui.core.SettingsBottomSheet
 import com.commondnd.ui.core.StatefulBottomSheet
 import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.label
@@ -55,7 +62,15 @@ fun InventoryScreen(
             inventory = player.inventory!!,
             onSettingsClick = { sheetDataState.data = it },
         )
-        ItemSettingsBottomSheet(sheetDataState = sheetDataState)
+        val testContext = LocalContext.current
+        ItemSettingsBottomSheet(
+            sheetDataState = sheetDataState,
+            options = ItemOption.entries,
+            onOption = { option, item ->
+                Toast.makeText(testContext, "Clicked on option $option for item ${item.name}",
+                    Toast.LENGTH_SHORT).show()
+            }
+        )
     } else {
         ErrorScreen(
             errorSpec = ErrorSpec(
@@ -179,55 +194,53 @@ private fun ItemRowHeader(
     }
 }
 
+private enum class ItemOption : BottomSheetOption<InventoryItem, ItemOption> {
+
+    Sell, Delete;
+
+    override fun content(
+        item: InventoryItem,
+        onOption: (ItemOption) -> Unit
+    ): (@Composable () -> Unit)? = when (this) {
+        Sell -> {
+            if (!item.sellable) {
+                null
+            } else {
+                {
+                    BottomSheetOptionRow(
+                        option = this,
+                        imageVector = Icons.Rounded.Sell,
+                        label = stringResource(R.string.label_sell),
+                        onOption = onOption
+                    )
+                }
+            }
+        }
+        Delete -> {
+            {
+                BottomSheetOptionRow(
+                    option = this,
+                    imageVector = Icons.Rounded.Delete,
+                    label = stringResource(R.string.label_delete),
+                    onOption = onOption
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ItemSettingsBottomSheet(
     modifier: Modifier = Modifier,
-    sheetDataState: BottomSheetDataState<InventoryItem>
+    sheetDataState: BottomSheetDataState<InventoryItem>,
+    options: List<ItemOption>,
+    onOption: (ItemOption, InventoryItem) -> Unit
 ) {
-    StatefulBottomSheet(
+    SettingsBottomSheet(
         modifier = modifier,
-        onDismissRequest = { sheetDataState.data = null },
-        sheetDataState = sheetDataState
-    ) { item: InventoryItem? ->
-        if (item?.sellable == true) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = {
-                        // TODO:
-                    }),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    modifier = Modifier.padding(16.dp),
-                    imageVector = Icons.Rounded.Sell,
-                    contentDescription = null
-                )
-                Text(
-                    style = MaterialTheme.typography.labelLarge,
-                    text = stringResource(R.string.label_sell)
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = {
-                    // TODO:
-                }),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier.padding(16.dp),
-                imageVector = Icons.Rounded.Delete,
-                contentDescription = null
-            )
-            Text(
-                style = MaterialTheme.typography.labelLarge,
-                text = stringResource(R.string.label_delete)
-            )
-        }
-    }
+        sheetDataState = sheetDataState,
+        options = options,
+        onOption = onOption
+    )
 }

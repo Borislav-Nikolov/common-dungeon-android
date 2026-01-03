@@ -36,7 +36,7 @@ import com.commondnd.data.character.PlayerCharacter
 import kotlin.collections.forEach
 
 @Composable
-fun <O : BottomSheetOption<O>> BottomSheetOptionRow(
+fun <T, O : BottomSheetOption<T, O>> BottomSheetOptionRow(
     modifier: Modifier = Modifier,
     option: O,
     imageVector: ImageVector,
@@ -61,16 +61,17 @@ fun <O : BottomSheetOption<O>> BottomSheetOptionRow(
     }
 }
 
-interface BottomSheetOption<O : BottomSheetOption<O>> {
+interface BottomSheetOption<T, O : BottomSheetOption<T, O>> {
 
     fun content(
+        item: T,
         onOption: (O) -> Unit
-    ): @Composable () -> Unit
+    ): (@Composable () -> Unit)?
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T, O : BottomSheetOption<O>> SettingsBottomSheet(
+fun <T, O : BottomSheetOption<T, O>> SettingsBottomSheet(
     modifier: Modifier = Modifier,
     sheetDataState: BottomSheetDataState<T>,
     options: List<O>,
@@ -83,7 +84,7 @@ fun <T, O : BottomSheetOption<O>> SettingsBottomSheet(
     ) { dataItem: T? ->
         dataItem?.let {
             options.forEach {
-                it.content { option -> onOption(option, dataItem) }.invoke()
+                it.content(dataItem) { option -> onOption(option, dataItem) }?.invoke()
             }
         }
     }

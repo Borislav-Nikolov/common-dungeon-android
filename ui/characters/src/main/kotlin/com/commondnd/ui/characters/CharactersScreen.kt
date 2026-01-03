@@ -239,13 +239,14 @@ private fun CharacterRowHeader(character: PlayerCharacter) {
     }
 }
 
-private enum class CharacterOption : BottomSheetOption<CharacterOption> {
+private enum class CharacterOption : BottomSheetOption<PlayerCharacter, CharacterOption> {
 
     ChangeStatus;
 
     override fun content(
+        item: PlayerCharacter,
         onOption: (CharacterOption) -> Unit
-    ): @Composable () -> Unit = when (this) {
+    ): (@Composable () -> Unit)? = when (this) {
         ChangeStatus -> {
             {
                 BottomSheetOptionRow(
@@ -258,8 +259,6 @@ private enum class CharacterOption : BottomSheetOption<CharacterOption> {
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
