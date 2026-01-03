@@ -13,6 +13,8 @@ import com.commondnd.data.player.Player
 import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.navigation.NavGraphRegistry
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 object HomeScreen {
 
@@ -75,7 +77,8 @@ fun NavGraphRegistry.registerHomeScreens() {
                             viewModel.calculateTokenConversion(
                                 from = from,
                                 to = to,
-                                value = value
+                                value = value,
+                                delayExecution = 500.milliseconds
                             )
                         },
                         doTokenConversion = { from, to, value ->

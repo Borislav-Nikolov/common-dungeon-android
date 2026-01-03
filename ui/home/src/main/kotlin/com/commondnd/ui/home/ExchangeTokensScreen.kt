@@ -1,5 +1,6 @@
 package com.commondnd.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,12 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,7 @@ import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
 import com.commondnd.data.player.TokenConversionResult
+import com.commondnd.ui.core.getTokenCount
 import com.commondnd.ui.core.label
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -153,7 +157,6 @@ fun ExchangeTokensScreen(
                     if (isValid || it.isEmpty()) {
                         value = it
                         if (isValid) {
-                            // TODO: do after a short delay to avoid spamming the backend when fast typing
                             calculateTokenConversion(
                                 fromSelected,
                                 toSelected,
@@ -168,13 +171,18 @@ fun ExchangeTokensScreen(
                 style = MaterialTheme.typography.titleMedium,
                 text = "${stringResource(R.string.title_token_conversion_calculation)}:"
             )
+            val isConversionError = remember(fromSelected, value) {
+                val intValue = value.toIntOrNull()
+                intValue != null && intValue > player.getTokenCount(fromSelected)
+            }
             Text(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                 style = MaterialTheme.typography.bodyMedium,
+                color = if (isConversionError) MaterialTheme.colorScheme.error else Color.Unspecified,
                 text = stringResource(
                     R.string.token_subtraction_result_format,
                     fromSelected.label,
-                    if (calculationState is State.Loaded<TokenConversionResult>) calculationState.value.subtracted else "..."
+                    if (value.isNotBlank() && calculationState is State.Loaded<TokenConversionResult>) calculationState.value.subtracted else "-"
                 )
             )
             Text(
@@ -183,7 +191,7 @@ fun ExchangeTokensScreen(
                 text = stringResource(
                     R.string.token_addition_result_format,
                     toSelected.label,
-                    if (calculationState is State.Loaded<TokenConversionResult>) calculationState.value.added else "..."
+                    if (value.isNotBlank() && calculationState is State.Loaded<TokenConversionResult>) calculationState.value.added else "-"
                 )
             )
             Button(
@@ -197,7 +205,7 @@ fun ExchangeTokensScreen(
                         value.toInt()
                     )
                 },
-                enabled = conversionState !is State.Loading && value.toIntOrNull() != null
+                enabled = conversionState !is State.Loading && value.toIntOrNull() != null && !isConversionError
             ) {
                 Text(text = stringResource(R.string.label_convert))
             }

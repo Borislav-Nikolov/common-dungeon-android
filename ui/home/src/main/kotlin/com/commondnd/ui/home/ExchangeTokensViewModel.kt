@@ -11,6 +11,7 @@ import com.commondnd.data.player.TokenConversionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,6 +23,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ExchangeTokensViewModel @Inject constructor(
@@ -50,13 +53,15 @@ class ExchangeTokensViewModel @Inject constructor(
     fun calculateTokenConversion(
         from: Rarity,
         to: Rarity,
-        value: Int
+        value: Int,
+        delayExecution: Duration = 0.milliseconds
     ) {
         calculationJob?.cancel()
         calculationJob = viewModelScope.launch {
             _calculationResult.update { State.Loading() }
             _calculationResult.update {
                 try {
+                    delay(delayExecution)
                     State.Loaded(
                         playerRepository.calculateTokenConversion(
                             from = from,

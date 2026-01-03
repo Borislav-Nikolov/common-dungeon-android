@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.ui.material3)
     implementation(projects.data.core)
     implementation(projects.data.user)
+    implementation(projects.data.player)
     implementation(projects.data.character)
 
     implementation(libs.androidx.compose.material3)
