@@ -1,11 +1,8 @@
 package com.commondnd.ui.characters
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.CompareArrows
-import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,13 +18,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,10 +42,11 @@ import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.core.ErrorSpec
 import com.commondnd.ui.core.ExpandableCard
 import com.commondnd.ui.core.ExperienceBar
+import com.commondnd.ui.core.RadioButtonDialog
 import com.commondnd.ui.core.SettingsBottomSheet
-import com.commondnd.ui.core.StatefulBottomSheet
 import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.rememberBottomSheetDataState
+import com.commondnd.ui.core.rememberSerializable
 import com.commondnd.ui.core.tierColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,19 +63,33 @@ fun CharactersScreen(
             characters = player.characters!!,
             onSettingsClick = { sheetDataState.data = it },
         )
-        val testContext = LocalContext.current
+        var changeStatusTarget: PlayerCharacter? by rememberSerializable {
+            mutableStateOf(null)
+        }
         CharacterSettingsBottomSheet(
             sheetDataState = sheetDataState,
             options = CharacterOption.entries,
             onOption = { option, character ->
                 when (option) {
                     CharacterOption.ChangeStatus -> {
-                        Toast.makeText(testContext, "Clicked on option $option for character ${character.characterName}",
-                            Toast.LENGTH_SHORT).show()
+                        changeStatusTarget = character
                     }
                 }
+                sheetDataState.data = null
             }
         )
+        if (changeStatusTarget != null) {
+            ChangeStatusDialog(
+                playerCharacter = changeStatusTarget!!,
+                onConfirm = { status, character ->
+                    onChangeStatus(status, character)
+                    changeStatusTarget = null
+                },
+                onDismiss = {
+                    changeStatusTarget = null
+                }
+            )
+        }
     } else {
         ErrorScreen(
             errorSpec = ErrorSpec(
@@ -84,6 +97,30 @@ fun CharactersScreen(
             )
         )
     }
+}
+
+@Composable
+private fun ChangeStatusDialog(
+    modifier: Modifier = Modifier,
+    playerCharacter: PlayerCharacter,
+    onConfirm: (CharacterStatus, PlayerCharacter) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var selectedOption by remember { mutableStateOf(playerCharacter.status) }
+    RadioButtonDialog(
+        modifier = modifier,
+        title = stringResource(R.string.label_change_status),
+        optionLabel = { status -> status.label },
+        options = CharacterStatus.entries,
+        confirmLabel = stringResource(R.string.label_change),
+        dismissLabel = stringResource(com.commondnd.ui.core.R.string.label_cancel),
+        onConfirm = {
+            onConfirm(selectedOption, playerCharacter)
+        },
+        onDismiss = onDismiss,
+        selectedOption = selectedOption,
+        onOptionSelected = { selectedOption = it }
+    )
 }
 
 @Composable
@@ -286,4 +323,11 @@ private val PlayerCharacter.sessionsToNextLevel: Int
         characterLevel < 3 -> 1
         characterLevel < 5 -> 2
         else -> 3
+    }
+
+private val CharacterStatus.label: String
+    @Composable get() = when(this) {
+        CharacterStatus.Active -> stringResource(R.string.label_status_active)
+        CharacterStatus.Inactive -> stringResource(R.string.label_status_inactive)
+        CharacterStatus.Dead -> stringResource(R.string.label_status_dead)
     }

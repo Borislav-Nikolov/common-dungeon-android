@@ -1,6 +1,8 @@
 package com.commondnd.data.player
 
 import android.util.Log
+import com.commondnd.data.character.CharacterStatus
+import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.Synchronizable
 import com.commondnd.data.user.UserRepository
@@ -30,6 +32,11 @@ interface PlayerRepository {
         from: Rarity,
         to: Rarity,
         value: Int
+    ): Boolean
+
+    suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
     ): Boolean
 }
 
@@ -65,6 +72,25 @@ internal class PlayerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun doTokenConversion(from: Rarity, to: Rarity, value: Int): Boolean {
+        try {
+            playerRemoteOperations.doTokenConversion(
+                from = from,
+                to = to,
+                value = value
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
+    ): Boolean {
         try {
             playerRemoteOperations.doTokenConversion(
                 from = from,

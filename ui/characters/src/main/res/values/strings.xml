@@ -4,4 +4,8 @@
     <string name="last_dm_format">Last DM: %s</string>
     <string name="label_change_status">Change status</string>
     <string name="title_characters_could_not_be_loaded">Could not load characters</string>
+    <string name="label_change">Change</string>
+    <string name="label_status_active">Active</string>
+    <string name="label_status_inactive">Inactive</string>
+    <string name="label_status_dead">Dead</string>
 </resources>

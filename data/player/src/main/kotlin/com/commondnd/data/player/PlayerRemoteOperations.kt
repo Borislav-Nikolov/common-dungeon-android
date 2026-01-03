@@ -1,5 +1,7 @@
 package com.commondnd.data.player
 
+import com.commondnd.data.character.CharacterStatus
+import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.networking.MessageResponse
 import javax.inject.Inject
@@ -16,6 +18,11 @@ interface PlayerRemoteOperations {
         from: Rarity,
         to: Rarity,
         value: Int
+    ): MessageResponse
+
+    suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
     ): MessageResponse
 }
 

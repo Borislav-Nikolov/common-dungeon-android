@@ -2,6 +2,8 @@ package com.commondnd.ui.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commondnd.data.character.CharacterStatus
+import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
 import com.commondnd.data.player.PlayerRepository
@@ -29,4 +31,11 @@ class CharactersViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = State.None()
         )
+
+    fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
+    ) {
+
+    }
 }

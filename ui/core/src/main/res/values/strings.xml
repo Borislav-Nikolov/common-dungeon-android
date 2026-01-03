@@ -14,4 +14,5 @@
     <string name="label_rare">Rare</string>
     <string name="label_very_rare">Very rare</string>
     <string name="label_legendary">Legendary</string>
+    <string name="label_cancel">Cancel</string>
 </resources>

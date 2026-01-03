@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.commondnd.android.library)
     alias(libs.plugins.commondnd.android.library.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -19,4 +20,5 @@ dependencies {
     implementation(libs.androidx.compose.material3.icons)
     implementation(libs.coil.compose)
     implementation(libs.coil.networkHttp)
+    implementation(libs.kotlinx.serialization.json)
 }
