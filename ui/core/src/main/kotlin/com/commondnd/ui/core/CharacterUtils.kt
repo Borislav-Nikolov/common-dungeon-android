@@ -12,7 +12,7 @@ import com.commondnd.ui.material3.veryRareTokenColor
 val PlayerCharacter.tierColor: Color
     @Composable get() = when {
         characterLevel < 5 -> uncommonTokenColor
-        characterLevel < 11 -> rareTokenColor
-        characterLevel < 17 -> veryRareTokenColor
+        characterLevel < 10 -> rareTokenColor
+        characterLevel < 15 -> veryRareTokenColor
         else -> legendaryTokenColor
     }

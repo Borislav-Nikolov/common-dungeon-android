@@ -1,11 +1,13 @@
 package com.commondnd.ui.inventory
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,6 +25,7 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,8 +37,11 @@ import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.core.ErrorSpec
 import com.commondnd.ui.core.ExpandableCard
 import com.commondnd.ui.core.StatefulBottomSheet
+import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.label
+import com.commondnd.ui.core.rarityColor
 import com.commondnd.ui.core.rememberBottomSheetDataState
+import com.commondnd.ui.core.tierColor
 
 @Composable
 fun InventoryScreen(
@@ -157,9 +163,11 @@ private fun ItemRowHeader(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            style = MaterialTheme.typography.titleMedium,
-            text = remember(item) { "${item.index}" }
+        Image(
+            modifier = Modifier.size(56.dp),
+            painter = item.icon,
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(item.rarityColor)
         )
         Text(
             modifier = modifier.padding(start = 8.dp),
