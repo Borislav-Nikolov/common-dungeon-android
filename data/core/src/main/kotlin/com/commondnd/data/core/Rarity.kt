@@ -36,7 +36,11 @@ enum class Rarity {
     companion object {
 
         fun fromString(value: String): Rarity =
-            Rarity.entries.first { it.name.equals(value, ignoreCase = true) }
+            if (value.equals("very rare", ignoreCase = true)) {
+                VeryRare
+            } else {
+                Rarity.entries.first { it.name.equals(value, ignoreCase = true) }
+            }
     }
 }
 

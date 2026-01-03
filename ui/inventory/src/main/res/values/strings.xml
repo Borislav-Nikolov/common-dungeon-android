@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_inventory">Inventory</string>
+    <string name="title_error_inventory_could_not_be_loaded">Inventory could not be loaded</string>
+    <string name="label_sell">Sell</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_rarity">Rarity</string>
+    <string name="label_quantity">Quantity</string>
+    <string name="label_sellable">Sellable</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
 </resources>

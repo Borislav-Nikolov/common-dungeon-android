@@ -3,6 +3,7 @@
     <string name="content_description_collapse">Collapse</string>
     <string name="content_description_expand">Expand</string>
     <string name="content_description_navigate_back">Navigate back</string>
+    <string name="content_description_options">Options</string>
     <string name="title_error_generic">Something went wrong</string>
     <string name="label_action_retry">Retry</string>
     <string name="label_action_back">Back</string>

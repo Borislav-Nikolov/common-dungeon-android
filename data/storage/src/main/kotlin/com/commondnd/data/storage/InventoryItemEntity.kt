@@ -37,5 +37,7 @@ data class InventoryItemEntity(
     @ColumnInfo(name = "item_index")
     val index: Int,
     @ColumnInfo(name = "quantity")
-    val quantity: Int
+    val quantity: Int,
+    @ColumnInfo(name = "sellable")
+    val sellable: Boolean
 )

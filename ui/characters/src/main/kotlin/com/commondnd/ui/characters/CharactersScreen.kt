@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.CompareArrows
+import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -167,7 +168,7 @@ private fun CharacterExpandedTopContent(
         ) {
             Icon(
                 imageVector = Icons.Rounded.Settings,
-                contentDescription = stringResource(R.string.content_description_change_status)
+                contentDescription = stringResource(com.commondnd.ui.core.R.string.content_description_options)
             )
         }
     }

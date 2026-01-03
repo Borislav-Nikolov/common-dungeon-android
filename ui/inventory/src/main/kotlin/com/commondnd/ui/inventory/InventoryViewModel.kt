@@ -1,10 +1,10 @@
-package com.commondnd.ui.characters
+package com.commondnd.ui.inventory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
 import com.commondnd.data.player.PlayerRepository
+import com.commondnd.data.core.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class CharactersViewModel @Inject constructor(
+class InventoryViewModel @Inject constructor(
     playerRepository: PlayerRepository
 ) : ViewModel() {
 

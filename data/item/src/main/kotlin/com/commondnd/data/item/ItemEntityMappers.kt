@@ -10,7 +10,8 @@ fun InventoryItem.toEntity(playerId: String): InventoryItemEntity = InventoryIte
     banned = banned,
     official = official,
     index = index,
-    quantity = quantity
+    quantity = quantity,
+    sellable = sellable
 )
 
 fun InventoryItemEntity.toDomain(): InventoryItem = InventoryItem(
@@ -20,5 +21,6 @@ fun InventoryItemEntity.toDomain(): InventoryItem = InventoryItem(
     banned = banned,
     official = official,
     index = index,
-    quantity = quantity
+    quantity = quantity,
+    sellable = sellable
 )
