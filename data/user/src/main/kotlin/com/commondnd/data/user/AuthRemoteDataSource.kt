@@ -1,5 +1,6 @@
 package com.commondnd.data.user
 
+import retrofit2.HttpException
 import javax.inject.Inject
 
 internal interface AuthRemoteDataSource {
@@ -22,7 +23,15 @@ internal class AuthRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getUser(): User {
-        return userService.getUser()
+        return try {
+            userService.getUser()
+        } catch (httpException: HttpException) {
+            when (httpException.code()) {
+                412 -> throw NoAccountException(httpException)
+                498 -> throw TokenExpiredException(httpException)
+                else -> throw httpException
+            }
+        }
     }
 
     override suspend fun logout() {

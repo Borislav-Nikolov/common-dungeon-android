@@ -39,6 +39,9 @@ androidxWork = "2.10.0"
 # Material
 material = "1.13.0"
 
+# Coil
+coil = "3.3.0"
+
 # Firebase
 firebaseBom = "34.7.0"
 
@@ -98,6 +101,10 @@ androidx-work-testing = { group = "androidx.work", name = "work-testing", versio
 
 # Material
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-networkHttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }

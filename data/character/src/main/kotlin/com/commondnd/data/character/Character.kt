@@ -21,10 +21,12 @@ data class PlayerCharacter(
     val characterLevel: Int,
     @SerialName("sessions_on_this_level")
     val sessionsOnThisLevel: Int,
+    @SerialName("max_level")
+    val maxLevel: Int,
     @SerialName("last_dm")
     val lastDm: String,
     @SerialName("status")
-    val status: String,
+    val status: CharacterStatus,
     @SerialName("classes")
     val classes: List<CharacterClass>
 )

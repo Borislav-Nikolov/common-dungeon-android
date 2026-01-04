@@ -1,5 +1,12 @@
 package com.commondnd.ui.inventory
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.commondnd.data.core.State
+import com.commondnd.data.player.Player
+import com.commondnd.ui.core.BrightDawnLoading
+import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.navigation.NavGraphRegistry
 
 object InventoryScreen {
@@ -10,8 +17,32 @@ object InventoryScreen {
 fun NavGraphRegistry.registerInventoryScreens() {
     register(
         key = InventoryScreen.Inventory,
-        content = { key, navController ->
-            InventoryScreen()
+        content = { _, navController ->
+            val viewModel: InventoryViewModel = hiltViewModel()
+            val playerDataState by viewModel.playerDataState.collectAsState()
+            val operationState by viewModel.operationState.collectAsState()
+            when (val state = playerDataState) {
+                is State.Error<Player> -> {
+                    ErrorScreen(
+                        error = state.error,
+                        onBack = { navController.pop() }
+                    )
+                }
+                is State.Loaded<Player> -> {
+                    InventoryScreen(
+                        player = state.value,
+                        operationState = operationState,
+                        onItemAction = { option, item ->
+                            when (option) {
+                                ItemOption.Sell -> viewModel.sellItem(item)
+                                ItemOption.Delete -> viewModel.deleteItem(item)
+                            }
+                        }
+                    )
+                }
+                is State.Loading<*>,
+                is State.None<*> -> BrightDawnLoading()
+            }
         }
     )
 }

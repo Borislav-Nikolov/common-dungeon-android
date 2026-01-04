@@ -3,6 +3,7 @@ package com.commondnd
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,19 +11,33 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.auth.AuthTabIntent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.commondnd.data.core.State
 import com.commondnd.ui.characters.registerCharactersScreens
+import com.commondnd.ui.core.NetworkState
+import com.commondnd.ui.core.NoNetworkBanner
+import com.commondnd.ui.core.networkState
+import com.commondnd.ui.core.rememberNetworkState
 import com.commondnd.ui.home.registerHomeScreens
 import com.commondnd.ui.initial.registerInitialScreens
 import com.commondnd.ui.inventory.registerInventoryScreens
@@ -76,51 +91,80 @@ class MainActivity : AppCompatActivity() {
             ) { darkTheme },
         )
         setContent {
+            val networkState: NetworkState = rememberNetworkState()
             CommonDungeonMaterialTheme(darkTheme = darkTheme) {
-                val user by mainViewModel.user.collectAsState()
+                val hasBottomNavigation by mainViewModel.hasBottomNavigation.collectAsState()
                 val currentGroup by mainViewModel.currentGroup.collectAsState(null)
                 Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .systemBarsPadding(),
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = if (hasBottomNavigation) ScaffoldDefaults.contentWindowInsets else WindowInsets.statusBars,
+                    topBar = {
+                        AnimatedVisibility(networkState == NetworkState.Unavailable) {
+                            NoNetworkBanner(modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding())
+                        }
+                    },
                     content = { contentPadding ->
-                        Surface(
+                        val dataSyncState by mainViewModel.dataSyncState.collectAsState()
+                        LaunchedEffect(dataSyncState) {
+                            if (dataSyncState is State.Error) {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    R.string.error_could_not_sync_data,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        PullToRefreshBox(
+                            isRefreshing = dataSyncState is State.Loading,
+                            onRefresh = { mainViewModel.syncData() },
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(contentPadding)
                         ) {
-                            CommonDungeonNavDisplay(
-                                groupedNavController = mainViewModel,
-                                registry = {
-                                    registerInitialScreens(
-                                        loginController = mainViewModel,
-                                        onLoginRequest = { uri, redirectUri, codeVerifier ->
-                                            AuthTabIntent.Builder().build().run {
-                                                launch(
-                                                    loginLauncher,
-                                                    uri,
-                                                    redirectUri.scheme!!
-                                                )
+                            Surface(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                CommonDungeonNavDisplay(
+                                    groupedNavController = mainViewModel,
+                                    registry = {
+                                        registerInitialScreens(
+                                            loginController = mainViewModel,
+                                            onLoginRequest = { uri, redirectUri, codeVerifier ->
+                                                AuthTabIntent.Builder().build().run {
+                                                    launch(
+                                                        loginLauncher,
+                                                        uri,
+                                                        redirectUri.scheme!!
+                                                    )
+                                                }
+                                                mainViewModel.startAuth(codeVerifier, redirectUri)
                                             }
-                                            mainViewModel.startAuth(codeVerifier, redirectUri)
-                                        }
-                                    )
-                                    registerHomeScreens()
-                                    registerCharactersScreens()
-                                    registerInventoryScreens()
-                                    registerMoreScreens()
-                                }
-                            )
+                                        )
+                                        registerHomeScreens()
+                                        registerCharactersScreens()
+                                        registerInventoryScreens()
+                                        registerMoreScreens()
+                                    }
+                                )
+                            }
                         }
                     },
                     bottomBar = {
-                        AnimatedVisibility(user != null) {
+                        AnimatedVisibility(hasBottomNavigation) {
                             NavigationBar {
                                 mainViewModel.navigationTabs.forEach {
                                     NavigationBarItem(
                                         selected = it == currentGroup,
                                         onClick = { mainViewModel.makeCurrent(it) },
-                                        icon = { Icon(iconMap(it), contentDescription = null) },
+                                        icon = {
+                                            Icon(
+                                                modifier = Modifier.sizeIn(maxHeight = 24.dp),
+                                                painter = iconMap(it),
+                                                contentDescription = null
+                                            )
+                                        },
                                         label = { Text(labelMap(it)) }
                                     )
                                 }

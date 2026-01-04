@@ -1,7 +1,13 @@
 package com.commondnd.data.player
 
+import android.util.Log
+import com.commondnd.data.character.CharacterStatus
+import com.commondnd.data.character.PlayerCharacter
+import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.Synchronizable
+import com.commondnd.data.item.InventoryItem
 import com.commondnd.data.user.UserRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,10 +22,36 @@ interface PlayerRepository {
     fun monitorOwnPlayerData(): Flow<Player>
 
     suspend fun getOwnPlayerData(): Player
+
+    suspend fun calculateTokenConversion(
+        from: Rarity,
+        to: Rarity,
+        value: Int
+    ): TokenConversionResult
+
+    suspend fun doTokenConversion(
+        from: Rarity,
+        to: Rarity,
+        value: Int
+    ): Boolean
+
+    suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
+    ): Boolean
+
+    suspend fun deleteItem(
+        item: InventoryItem
+    ): Boolean
+
+    suspend fun sellItem(
+        item: InventoryItem
+    ): Boolean
 }
 
 internal class PlayerRepositoryImpl @Inject constructor(
     private val playerRemoteSource: PlayerRemoteSource,
+    private val playerRemoteOperations: PlayerRemoteOperations,
     private val playerLocalSource: PlayerLocalSource,
     private val coroutineScope: CoroutineScope,
     private val userRepository: UserRepository
@@ -36,8 +68,82 @@ internal class PlayerRepositoryImpl @Inject constructor(
         return initAndGet()
     }
 
+    override suspend fun calculateTokenConversion(
+        from: Rarity,
+        to: Rarity,
+        value: Int
+    ): TokenConversionResult {
+        return playerRemoteOperations.calculateTokenConversion(
+            from = from,
+            to = to,
+            value = value
+        )
+    }
+
+    override suspend fun doTokenConversion(from: Rarity, to: Rarity, value: Int): Boolean {
+        try {
+            playerRemoteOperations.doTokenConversion(
+                from = from,
+                to = to,
+                value = value
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
+    ): Boolean {
+        try {
+            playerRemoteOperations.changeCharacterStatus(
+                status = status,
+                character = character
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun deleteItem(item: InventoryItem): Boolean {
+        try {
+            playerRemoteOperations.deleteItem(
+                item = item
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun sellItem(item: InventoryItem): Boolean {
+        try {
+            playerRemoteOperations.sellItem(
+                item = item
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
     override suspend fun synchronize(): Boolean {
-        userRepository.getUser()?.id?.let { init(it) }
+        userRepository.getUser()?.id?.let { init(it, forceRefresh = true) }
         return true
     }
 
@@ -48,22 +154,28 @@ internal class PlayerRepositoryImpl @Inject constructor(
 
     private suspend fun initIfNeeded() {
         if (ownPlayerData.value == null) {
-            init(requireNotNull(userRepository.getUser()).id)
+            init(requireNotNull(userRepository.getUser()).id, forceRefresh = false)
         }
     }
 
-    private suspend fun init(playerId: String) {
-        ownPlayerData.update { getPlayer(playerId) }
+    private suspend fun init(playerId: String, forceRefresh: Boolean) {
+        ownPlayerData.update { getPlayer(playerId, forceRefresh) }
     }
 
-    private suspend fun getPlayer(playerId: String): Player {
-        var player: Player? = playerLocalSource.getPlayer(playerId)
+    private suspend fun getPlayer(playerId: String, forceRefresh: Boolean): Player {
+        var player: Player? = if (forceRefresh) null else playerLocalSource.getPlayer(playerId)
         if (player == null) {
-            player = playerRemoteSource.getOwnPlayerData(
-                includeInventory = true,
-                includeCharacters = true
-            )
-            playerLocalSource.storePlayer(player)
+            try {
+                player = playerRemoteSource.getOwnPlayerData(
+                    includeInventory = true,
+                    includeCharacters = true
+                )
+                playerLocalSource.storePlayer(player)
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (_: Exception) {
+                player = playerLocalSource.getPlayer(playerId)
+            }
         }
         return requireNotNull(player)
     }

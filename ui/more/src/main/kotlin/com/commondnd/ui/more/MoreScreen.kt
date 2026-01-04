@@ -7,21 +7,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun MoreScreen(
     modifier: Modifier = Modifier,
-    username: String?,
     onLogout: () -> Unit
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.Center
     ) {
-        Text("This is the More page")
         Button(onClick = onLogout) {
-            Text("Log out, $username")
+            Text(stringResource(R.string.label_log_out))
         }
     }
 }

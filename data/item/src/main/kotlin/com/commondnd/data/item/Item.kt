@@ -40,7 +40,9 @@ data class InventoryItem(
     @SerialName("index")
     val index: Int,
     @SerialName("quantity")
-    val quantity: Int
+    val quantity: Int,
+    @SerialName("sellable")
+    val sellable: Boolean
 ) : Item
 
 @Serializable

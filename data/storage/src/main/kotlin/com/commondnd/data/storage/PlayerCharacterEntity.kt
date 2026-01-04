@@ -30,6 +30,8 @@ data class PlayerCharacterEntity(
     val characterLevel: Int,
     @ColumnInfo(name = "sessions_on_this_level")
     val sessionsOnThisLevel: Int,
+    @ColumnInfo(name = "max_level")
+    val maxLevel: Int,
     @ColumnInfo(name = "last_dm")
     val lastDm: String,
     @ColumnInfo(name = "status")

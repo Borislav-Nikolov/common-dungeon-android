@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "40851c64abe1648fdc97a0b8015a24b4",
+    "identityHash": "2d3cb7a078d065aaf00c6a9062e61578",
     "entities": [
       {
         "tableName": "players",
@@ -84,7 +84,7 @@
       },
       {
         "tableName": "player_characters",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player_id` TEXT NOT NULL, `character_name` TEXT NOT NULL, `character_level` INTEGER NOT NULL, `sessions_on_this_level` INTEGER NOT NULL, `last_dm` TEXT NOT NULL, `status` TEXT NOT NULL, FOREIGN KEY(`player_id`) REFERENCES `players`(`player_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player_id` TEXT NOT NULL, `character_name` TEXT NOT NULL, `character_level` INTEGER NOT NULL, `sessions_on_this_level` INTEGER NOT NULL, `max_level` INTEGER NOT NULL, `last_dm` TEXT NOT NULL, `status` TEXT NOT NULL, FOREIGN KEY(`player_id`) REFERENCES `players`(`player_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -113,6 +113,12 @@
           {
             "fieldPath": "sessionsOnThisLevel",
             "columnName": "sessions_on_this_level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxLevel",
+            "columnName": "max_level",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -228,7 +234,7 @@
       },
       {
         "tableName": "inventory_items",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player_id` TEXT NOT NULL, `name` TEXT NOT NULL, `rarity` TEXT NOT NULL, `rarity_level` TEXT NOT NULL, `banned` INTEGER NOT NULL, `official` INTEGER NOT NULL, `item_index` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, FOREIGN KEY(`player_id`) REFERENCES `players`(`player_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player_id` TEXT NOT NULL, `name` TEXT NOT NULL, `rarity` TEXT NOT NULL, `rarity_level` TEXT NOT NULL, `banned` INTEGER NOT NULL, `official` INTEGER NOT NULL, `item_index` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `sellable` INTEGER NOT NULL, FOREIGN KEY(`player_id`) REFERENCES `players`(`player_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -283,6 +289,12 @@
             "columnName": "quantity",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "sellable",
+            "columnName": "sellable",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -319,7 +331,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '40851c64abe1648fdc97a0b8015a24b4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2d3cb7a078d065aaf00c6a9062e61578')"
     ]
   }
 }

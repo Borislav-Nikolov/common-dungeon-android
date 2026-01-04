@@ -1,157 +1,110 @@
 package com.commondnd.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CurrencyExchange
+import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.commondnd.data.player.Player
+import com.commondnd.data.user.User
+import com.commondnd.ui.core.DiscordAvatar
+import com.commondnd.ui.core.ExperienceBar
+import com.commondnd.ui.material3.commonTokenColor
+import com.commondnd.ui.material3.legendaryTokenColor
+import com.commondnd.ui.material3.rareTokenColor
+import com.commondnd.ui.material3.uncommonTokenColor
+import com.commondnd.ui.material3.veryRareTokenColor
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    playerData: Player
+    user: User?,
+    playerData: Player,
+    onExchangeTokens: () -> Unit
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = playerData.name,
+            modifier = Modifier.padding(top = 24.dp),
             style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold
+            text = playerData.name
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row {
-            Text(
-                text = "Level ${playerData.playerLevel}",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = " • ",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = playerData.playerRole,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = "Status: ${playerData.playerStatus}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary
+        PlayerInfoRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            user = user,
+            playerData = playerData
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Progress",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Sessions on Level ${playerData.playerLevel}: ${playerData.sessionsOnThisLevel}")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Tokens",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TokenRow("Common", playerData.commonTokens)
-                TokenRow("Uncommon", playerData.uncommonTokens)
-                TokenRow("Rare", playerData.rareTokens)
-                TokenRow("Very Rare", playerData.veryRareTokens)
-                TokenRow("Legendary", playerData.legendaryTokens)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Card(
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "${playerData.characters?.size ?: 0}",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Characters")
-                }
-            }
-
-            Card(
-                modifier = Modifier.weight(1f).padding(start = 8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "${playerData.inventory?.size ?: 0}",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Items")
-                }
-            }
-        }
+        TokensCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onExchangeTokens = onExchangeTokens,
+            playerData = playerData
+        )
     }
 }
 
 @Composable
-private fun TokenRow(name: String, count: Int) {
+private fun PlayerInfoRow(
+    modifier: Modifier = Modifier,
+    user: User?,
+    playerData: Player
+) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier
     ) {
-        Text(name)
-        Text(
-            text = count.toString(),
-            fontWeight = FontWeight.Bold
+        DiscordAvatar(
+            modifier = Modifier.size(80.dp),
+            user = user
         )
+        Column(
+            modifier = Modifier.padding(start = 16.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(
+                    com.commondnd.ui.core.R.string.label_level_format,
+                    playerData.playerLevel
+                )
+            )
+            ExperienceBar(
+                currentProgress = playerData.sessionsOnThisLevel,
+                maxProgress = 6
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(R.string.label_role_format, playerData.playerRole)
+                )
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(com.commondnd.ui.core.R.string.label_status_format, playerData.playerStatus)
+                )
+            }
+        }
     }
 }

@@ -2,8 +2,14 @@ package com.commondnd.ui.initial
 
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.commondnd.ui.core.BrightDawnLoading
 import com.commondnd.ui.login.LoginController
 import com.commondnd.ui.login.LoginScreen
 import com.commondnd.ui.login.registerLoginScreens
@@ -22,17 +28,23 @@ fun NavGraphRegistry.registerInitialScreens(
 ) {
     register(
         key = InitialScreen.Splash,
-        content = { key, navController ->
-            // TODO:
+        content = { _, _ ->
             Surface(
                 modifier = Modifier.fillMaxSize()
-            ) { }
+            ) {
+                BrightDawnLoading()
+            }
         }
     )
     register(
         key = InitialScreen.Initial,
-        content = { key, navController ->
+        content = { _, navController ->
             InitialScreen(
+                modifier = Modifier
+                    .systemBarsPadding()
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .padding(16.dp),
                 onLoginClick = {
                     navController.push(LoginScreen.Login)
                 },
@@ -44,8 +56,8 @@ fun NavGraphRegistry.registerInitialScreens(
     )
     register(
         key = InitialScreen.About,
-        content = { key, navController ->
-            AboutScreen()
+        content = { _, navController ->
+            AboutScreen(onBack = { navController.pop() })
         }
     )
 

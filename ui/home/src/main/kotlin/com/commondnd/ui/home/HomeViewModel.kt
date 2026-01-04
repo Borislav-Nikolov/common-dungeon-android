@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.commondnd.data.core.State
 import com.commondnd.data.player.Player
 import com.commondnd.data.player.PlayerRepository
+import com.commondnd.data.user.User
+import com.commondnd.data.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +18,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    userRepository: UserRepository,
     playerRepository: PlayerRepository
 ) : ViewModel() {
+
+    val userState: StateFlow<State<User?>> = userRepository
+        .monitorUser()
+        .map<User?, State<User?>> { State.Loaded(it) }
+        .onStart { emit(State.Loading()) }
+        .catch { emit(State.Error(it)) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = State.None()
+        )
 
     val playerDataState: StateFlow<State<Player>> = playerRepository
         .monitorOwnPlayerData()

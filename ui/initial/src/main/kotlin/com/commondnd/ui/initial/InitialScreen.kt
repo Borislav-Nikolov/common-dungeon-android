@@ -1,12 +1,30 @@
 package com.commondnd.ui.initial
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.commondnd.ui.core.BasicScreen
+import com.commondnd.ui.material3.CommonDungeonMaterialTheme
+
+@Preview
+@Composable
+fun InitialScreenPreview() {
+    CommonDungeonMaterialTheme {
+        Surface {
+            InitialScreen(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                onLoginClick = {},
+                onAboutClick = {}
+            )
+        }
+    }
+}
 
 @Composable
 fun InitialScreen(
@@ -14,17 +32,14 @@ fun InitialScreen(
     onLoginClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
-    Column(
+    BasicScreen(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text("Welcome to CommonDungeon")
-        Button(onClick = onLoginClick) {
-            Text("Log in")
-        }
-        Button(onClick = onAboutClick) {
-            Text("About")
-        }
-    }
+        image = painterResource(com.commondnd.ui.core.R.drawable.logo_bright_dawn_color),
+        title = stringResource(R.string.title_initial_screen),
+        subtitle = stringResource(R.string.description_initial_screen),
+        primaryActionLabel = stringResource(R.string.label_log_in_with_discord),
+        primaryAction = onLoginClick,
+        secondaryActionLabel = stringResource(R.string.label_learn_more),
+        secondaryAction = onAboutClick
+    )
 }

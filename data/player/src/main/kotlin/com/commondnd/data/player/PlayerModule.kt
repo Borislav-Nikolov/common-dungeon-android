@@ -20,20 +20,24 @@ internal abstract class PlayerModule {
 
     @Binds
     @Singleton
+    abstract fun bindsPlayerRemoteOperations(impl: PlayerRemoteOperationsImpl): PlayerRemoteOperations
+
+    @Binds
+    @Singleton
     abstract fun bindsPlayerLocalSource(impl: PlayerLocalSourceImpl): PlayerLocalSource
 
     @Binds
     @Singleton
     abstract fun bindsPlayerRepository(impl: PlayerRepositoryImpl): PlayerRepository
 
-    @Binds
-    @Singleton
-    @IntoSet
-    abstract fun bindPlayerRepositorySynchronizable(
-        userRepository: PlayerRepositoryImpl
-    ): Synchronizable
-
     companion object {
+
+        @Provides
+        @Singleton
+        @IntoSet
+        fun providePlayerRepositorySynchronizable(
+            playerRepository: PlayerRepository
+        ): Synchronizable = playerRepository as Synchronizable
 
         @Provides
         @Singleton

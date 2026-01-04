@@ -1,7 +1,9 @@
 package com.commondnd.data.user
 
+import android.util.Log
 import com.commondnd.data.core.Synchronizable
 import com.commondnd.data.storage.PlayerDao
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +16,10 @@ import javax.inject.Inject
 interface UserRepository {
 
     fun getUser(): User?
+    suspend fun getAsync(): User?
     fun monitorUser(): Flow<User?>
     suspend fun login(userAuthData: UserAuthData)
-    suspend fun logout()
+    suspend fun logout(): Boolean
 }
 
 internal class UserRepositoryImpl @Inject constructor(
@@ -36,6 +39,8 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override fun getUser(): User? = cachedUser.value
 
+    override suspend fun getAsync(): User? = getOrFetchUser()
+
     override fun monitorUser(): Flow<User?> = cachedUser
 
     override suspend fun login(userAuthData: UserAuthData) {
@@ -44,12 +49,19 @@ internal class UserRepositoryImpl @Inject constructor(
         cachedUser.update { localSource.get() }
     }
 
-    override suspend fun logout() {
-        remoteSource.logout()
-        tokenStorage.clear()
-        localSource.clear()
-        playerDao.deleteAllPlayers()
-        cachedUser.update { null }
+    override suspend fun logout(): Boolean {
+        try {
+            remoteSource.logout()
+            tokenStorage.clear()
+            localSource.clear()
+            playerDao.deleteAllPlayers()
+            cachedUser.update { null }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+        return true
     }
 
     override suspend fun synchronize(): Boolean {
@@ -61,23 +73,28 @@ internal class UserRepositoryImpl @Inject constructor(
         }
         val remoteUser = try {
             remoteSource.getUser()
-        } catch (_: IOException) {
-            logout()
-            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return logout()
         }
         localSource.store(remoteUser)
         return true
     }
 
-    private suspend fun initiateUser(): User? = tokenStorage.get()?.let {
+    private suspend fun initiateUser(): User? =
         cachedUser.updateAndGet { getOrFetchUser() }
-    }
 
     private suspend fun getOrFetchUser(): User? {
-        return localSource.get() ?: try {
-            remoteSource.getUser().also { localSource.store(it) }
-        } catch (_: IOException) {
-            return null
+        return tokenStorage.get()?.let {
+            localSource.get() ?: try {
+                remoteSource.getUser().also { localSource.store(it) }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (_: Exception) {
+                logout()
+                return null
+            }
         }
     }
 }

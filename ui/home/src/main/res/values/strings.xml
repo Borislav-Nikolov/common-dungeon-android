@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_home">Home</string>
+    <string name="common_tokens">Common tokens</string>
+    <string name="uncommon_tokens">Uncommon tokens</string>
+    <string name="rare_tokens">Rare tokens</string>
+    <string name="very_rare_tokens">Very rare tokens</string>
+    <string name="legendary_tokens">Legendary tokens</string>
+    <string name="label_role_format">Role: %s</string>
+    <string name="label_tokens">Available tokens</string>
+    <string name="content_description_exchange_tokens">Exchange tokens</string>
+    <string name="label_from">From</string>
+    <string name="label_to">To</string>
+    <string name="token_subtraction_result_format">%s tokens to be subtracted: %s</string>
+    <string name="token_addition_result_format">%s tokens to be added: %s</string>
+    <string name="title_token_conversion_calculation">Conversion calculation</string>
+    <string name="label_convert">Convert</string>
+    <string name="title_convert_tokens">Convert Tokens</string>
 </resources>
