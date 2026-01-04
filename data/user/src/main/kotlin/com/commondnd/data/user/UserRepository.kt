@@ -19,7 +19,7 @@ interface UserRepository {
     suspend fun getAsync(): User?
     fun monitorUser(): Flow<User?>
     suspend fun login(userAuthData: UserAuthData)
-    suspend fun logout()
+    suspend fun logout(): Boolean
 }
 
 internal class UserRepositoryImpl @Inject constructor(
@@ -49,12 +49,19 @@ internal class UserRepositoryImpl @Inject constructor(
         cachedUser.update { localSource.get() }
     }
 
-    override suspend fun logout() {
-        remoteSource.logout()
-        tokenStorage.clear()
-        localSource.clear()
-        playerDao.deleteAllPlayers()
-        cachedUser.update { null }
+    override suspend fun logout(): Boolean {
+        try {
+            remoteSource.logout()
+            tokenStorage.clear()
+            localSource.clear()
+            playerDao.deleteAllPlayers()
+            cachedUser.update { null }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+        return true
     }
 
     override suspend fun synchronize(): Boolean {
@@ -69,8 +76,7 @@ internal class UserRepositoryImpl @Inject constructor(
         } catch (cancellation: CancellationException) {
             throw cancellation
         } catch (_: Exception) {
-            logout()
-            return true
+            return logout()
         }
         localSource.store(remoteUser)
         return true

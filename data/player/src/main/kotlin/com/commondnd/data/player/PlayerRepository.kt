@@ -131,11 +131,17 @@ internal class PlayerRepositoryImpl @Inject constructor(
     private suspend fun getPlayer(playerId: String, forceRefresh: Boolean): Player {
         var player: Player? = if (forceRefresh) null else playerLocalSource.getPlayer(playerId)
         if (player == null) {
-            player = playerRemoteSource.getOwnPlayerData(
-                includeInventory = true,
-                includeCharacters = true
-            )
-            playerLocalSource.storePlayer(player)
+            try {
+                player = playerRemoteSource.getOwnPlayerData(
+                    includeInventory = true,
+                    includeCharacters = true
+                )
+                playerLocalSource.storePlayer(player)
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (_: Exception) {
+                player = playerLocalSource.getPlayer(playerId)
+            }
         }
         return requireNotNull(player)
     }
