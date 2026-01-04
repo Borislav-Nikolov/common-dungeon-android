@@ -15,4 +15,5 @@
     <string name="label_very_rare">Very rare</string>
     <string name="label_legendary">Legendary</string>
     <string name="label_cancel">Cancel</string>
+    <string name="error_no_network">No internet connection</string>
 </resources>

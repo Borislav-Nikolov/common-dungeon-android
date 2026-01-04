@@ -130,6 +130,11 @@ private fun ItemExpandedContent(
         Column(
             modifier = Modifier.weight(1f)
         ) {
+            val nameLabel = stringResource(R.string.label_name)
+            Text(
+                style = MaterialTheme.typography.bodyMedium,
+                text = remember(item) { "${nameLabel}: ${item.name}" }
+            )
             val raritySectionLabel = stringResource(R.string.label_rarity)
             val rarity = remember(item) { Rarity.fromString(item.rarity) }
             val rarityLabel = rarity.label

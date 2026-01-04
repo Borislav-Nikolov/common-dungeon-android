@@ -12,8 +12,6 @@ class MoreViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    fun getUser() = userRepository.getUser()
-
     fun logout() {
         viewModelScope.launch {
             userRepository.logout()

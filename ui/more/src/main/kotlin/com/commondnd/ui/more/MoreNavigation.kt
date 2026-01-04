@@ -1,5 +1,7 @@
 package com.commondnd.ui.more
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.commondnd.ui.navigation.NavGraphRegistry
 
@@ -11,11 +13,9 @@ object MoreScreen {
 fun NavGraphRegistry.registerMoreScreens() {
     register(
         key = MoreScreen.More,
-        content = { key, navController ->
+        content = { _, _ ->
             val viewModel: MoreViewModel = hiltViewModel()
-            MoreScreen(
-                username = viewModel.getUser()?.username,
-                onLogout = { viewModel.logout() })
+            MoreScreen(onLogout = { viewModel.logout() })
         }
     )
 }
