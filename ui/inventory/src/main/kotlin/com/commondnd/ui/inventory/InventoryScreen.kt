@@ -1,9 +1,6 @@
 package com.commondnd.ui.inventory
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,9 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.Sell
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,19 +18,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
+import com.commondnd.data.core.State
 import com.commondnd.data.item.InventoryItem
 import com.commondnd.data.player.Player
+import com.commondnd.ui.core.BasicConfirmationDialog
 import com.commondnd.ui.core.BottomSheetDataState
 import com.commondnd.ui.core.BottomSheetOption
 import com.commondnd.ui.core.BottomSheetOptionRow
@@ -43,34 +41,53 @@ import com.commondnd.ui.core.ErrorScreen
 import com.commondnd.ui.core.ErrorSpec
 import com.commondnd.ui.core.ExpandableCard
 import com.commondnd.ui.core.SettingsBottomSheet
-import com.commondnd.ui.core.StatefulBottomSheet
 import com.commondnd.ui.core.icon
 import com.commondnd.ui.core.label
 import com.commondnd.ui.core.rarityColor
 import com.commondnd.ui.core.rememberBottomSheetDataState
-import com.commondnd.ui.core.tierColor
+import com.commondnd.ui.core.rememberSerializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Suppress("AssignedValueIsNeverRead")
 @Composable
-fun InventoryScreen(
+internal fun InventoryScreen(
     modifier: Modifier = Modifier,
-    player: Player
+    player: Player,
+    operationState: State<Unit>,
+    onItemAction: (ItemOption, InventoryItem) -> Unit
 ) {
     if (player.inventory != null) {
         val sheetDataState = rememberBottomSheetDataState<InventoryItem>()
+        var confirmationData: ConfirmationData? by rememberSerializable {
+            mutableStateOf(null)
+        }
         InventoryList(
             modifier = modifier,
+            isLoading = operationState is State.Loading,
             inventory = player.inventory!!,
             onSettingsClick = { sheetDataState.data = it },
         )
-        val testContext = LocalContext.current
         ItemSettingsBottomSheet(
             sheetDataState = sheetDataState,
             options = ItemOption.entries,
             onOption = { option, item ->
-                Toast.makeText(testContext, "Clicked on option $option for item ${item.name}",
-                    Toast.LENGTH_SHORT).show()
+                confirmationData = ConfirmationData(option, item)
+                sheetDataState.data = null
             }
         )
+        if (confirmationData != null) {
+            BasicConfirmationDialog(
+                title = confirmationData!!.option.confirmationTitle(confirmationData!!.item),
+                onConfirm = {
+                    onItemAction(confirmationData!!.option, confirmationData!!.item)
+                    confirmationData = null
+                },
+                onDismiss = {
+                    confirmationData = null
+                }
+            )
+        }
     } else {
         ErrorScreen(
             errorSpec = ErrorSpec(
@@ -80,9 +97,18 @@ fun InventoryScreen(
     }
 }
 
+@Serializable
+private data class ConfirmationData(
+    @SerialName("option")
+    val option: ItemOption,
+    @SerialName("item")
+    val item: InventoryItem
+)
+
 @Composable
 private fun InventoryList(
     modifier: Modifier,
+    isLoading: Boolean,
     inventory: List<InventoryItem>,
     onSettingsClick: (InventoryItem) -> Unit
 ) {
@@ -109,6 +135,7 @@ private fun InventoryList(
                 expandedContent = {
                     ItemExpandedContent(
                         modifier = Modifier.fillMaxWidth(),
+                        isLoading = isLoading,
                         item = item,
                         onSettingsClick = { onSettingsClick(item) }
                     )
@@ -121,6 +148,7 @@ private fun InventoryList(
 @Composable
 private fun ItemExpandedContent(
     modifier: Modifier = Modifier,
+    isLoading: Boolean,
     item: InventoryItem,
     onSettingsClick: () -> Unit
 ) {
@@ -164,7 +192,8 @@ private fun ItemExpandedContent(
         }
         IconButton(
             modifier = Modifier.padding(start = 4.dp),
-            onClick = onSettingsClick
+            onClick = onSettingsClick,
+            enabled = !isLoading
         ) {
             Icon(
                 imageVector = Icons.Rounded.Settings,
@@ -199,7 +228,7 @@ private fun ItemRowHeader(
     }
 }
 
-private enum class ItemOption : BottomSheetOption<InventoryItem, ItemOption> {
+internal enum class ItemOption : BottomSheetOption<InventoryItem, ItemOption> {
 
     Sell, Delete;
 
@@ -232,6 +261,12 @@ private enum class ItemOption : BottomSheetOption<InventoryItem, ItemOption> {
             }
         }
     }
+}
+
+@Composable
+private fun ItemOption.confirmationTitle(item: InventoryItem): String = when (this) {
+    ItemOption.Sell -> stringResource(R.string.title_sell_item_format, item.name)
+    ItemOption.Delete -> stringResource(R.string.title_delete_item_format, item.name)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

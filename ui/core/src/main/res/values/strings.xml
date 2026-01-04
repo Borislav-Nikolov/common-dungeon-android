@@ -16,4 +16,5 @@
     <string name="label_legendary">Legendary</string>
     <string name="label_cancel">Cancel</string>
     <string name="error_no_network">No internet connection</string>
+    <string name="label_ok">Ok</string>
 </resources>

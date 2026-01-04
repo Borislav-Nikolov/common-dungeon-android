@@ -30,4 +30,14 @@ interface PlayerService {
     suspend fun updateCharacterStatus(
         @Body data: ChangeCharacterStatusRequestData
     ): MessageResponse
+
+    @POST("sell_item_from_inventory")
+    suspend fun sellItemFromInventory(
+        @Body data: InventoryItemRequestData
+    ): MessageResponse
+
+    @POST("delete_item_from_inventory")
+    suspend fun deleteItemFromInventory(
+        @Body data: InventoryItemRequestData
+    ): MessageResponse
 }

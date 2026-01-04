@@ -20,6 +20,7 @@ fun NavGraphRegistry.registerInventoryScreens() {
         content = { _, navController ->
             val viewModel: InventoryViewModel = hiltViewModel()
             val playerDataState by viewModel.playerDataState.collectAsState()
+            val operationState by viewModel.operationState.collectAsState()
             when (val state = playerDataState) {
                 is State.Error<Player> -> {
                     ErrorScreen(
@@ -28,7 +29,16 @@ fun NavGraphRegistry.registerInventoryScreens() {
                     )
                 }
                 is State.Loaded<Player> -> {
-                    InventoryScreen(player = state.value)
+                    InventoryScreen(
+                        player = state.value,
+                        operationState = operationState,
+                        onItemAction = { option, item ->
+                            when (option) {
+                                ItemOption.Sell -> viewModel.sellItem(item)
+                                ItemOption.Delete -> viewModel.deleteItem(item)
+                            }
+                        }
+                    )
                 }
                 is State.Loading<*>,
                 is State.None<*> -> BrightDawnLoading()

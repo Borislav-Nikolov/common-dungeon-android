@@ -5,6 +5,7 @@ import com.commondnd.data.character.CharacterStatus
 import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
 import com.commondnd.data.core.Synchronizable
+import com.commondnd.data.item.InventoryItem
 import com.commondnd.data.user.UserRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +38,14 @@ interface PlayerRepository {
     suspend fun changeCharacterStatus(
         status: CharacterStatus,
         character: PlayerCharacter
+    ): Boolean
+
+    suspend fun deleteItem(
+        item: InventoryItem
+    ): Boolean
+
+    suspend fun sellItem(
+        item: InventoryItem
     ): Boolean
 }
 
@@ -98,6 +107,34 @@ internal class PlayerRepositoryImpl @Inject constructor(
             playerRemoteOperations.changeCharacterStatus(
                 status = status,
                 character = character
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun deleteItem(item: InventoryItem): Boolean {
+        try {
+            playerRemoteOperations.deleteItem(
+                item = item
+            )
+            synchronize()
+            return true
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun sellItem(item: InventoryItem): Boolean {
+        try {
+            playerRemoteOperations.sellItem(
+                item = item
             )
             synchronize()
             return true

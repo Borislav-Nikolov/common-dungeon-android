@@ -13,8 +13,45 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+
+@Composable
+fun BasicConfirmationDialog(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String? = null,
+    confirmLabel: String = stringResource(R.string.label_ok),
+    dismissLabel: String = stringResource(R.string.label_cancel),
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        modifier = modifier,
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = description?.let {
+            {
+                Text(it)
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm
+            ) {
+                Text(confirmLabel)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(dismissLabel)
+            }
+        }
+    )
+}
 
 @Composable
 fun <O> RadioButtonDialog(

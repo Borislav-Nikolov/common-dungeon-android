@@ -10,4 +10,6 @@
     <string name="label_sellable">Sellable</string>
     <string name="label_yes">Yes</string>
     <string name="label_no">No</string>
+    <string name="title_sell_item_format">Sell %s?</string>
+    <string name="title_delete_item_format">Delete %s?</string>
 </resources>

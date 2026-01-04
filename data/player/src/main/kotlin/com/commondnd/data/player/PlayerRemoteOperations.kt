@@ -3,6 +3,7 @@ package com.commondnd.data.player
 import com.commondnd.data.character.CharacterStatus
 import com.commondnd.data.character.PlayerCharacter
 import com.commondnd.data.core.Rarity
+import com.commondnd.data.item.InventoryItem
 import com.commondnd.data.networking.MessageResponse
 import javax.inject.Inject
 
@@ -23,6 +24,14 @@ interface PlayerRemoteOperations {
     suspend fun changeCharacterStatus(
         status: CharacterStatus,
         character: PlayerCharacter
+    ): MessageResponse
+
+    suspend fun deleteItem(
+        item: InventoryItem
+    ): MessageResponse
+
+    suspend fun sellItem(
+        item: InventoryItem
     ): MessageResponse
 }
 
@@ -64,6 +73,22 @@ internal class PlayerRemoteOperationsImpl @Inject constructor(
             data = ChangeCharacterStatusRequestData(
                 characterName = character.characterName,
                 newStatus = status
+            )
+        )
+    }
+
+    override suspend fun deleteItem(item: InventoryItem): MessageResponse {
+        return playerService.deleteItemFromInventory(
+            data = InventoryItemRequestData(
+                itemIndex = item.index
+            )
+        )
+    }
+
+    override suspend fun sellItem(item: InventoryItem): MessageResponse {
+        return playerService.sellItemFromInventory(
+            data = InventoryItemRequestData(
+                itemIndex = item.index
             )
         )
     }
