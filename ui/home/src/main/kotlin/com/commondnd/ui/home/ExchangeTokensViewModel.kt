@@ -85,22 +85,20 @@ class ExchangeTokensViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _conversionResult.update { State.Loading() }
-            _conversionResult.update {
-                try {
-                    if (playerRepository.doTokenConversion(
+            try {
+                if (playerRepository.doTokenConversion(
                         from = from,
                         to = to,
                         value = value
                     )) {
-                        State.Loaded(Unit)
-                    } else {
-                        State.Error(RuntimeException("Failed to complete token conversion."))
-                    }
-                } catch (cancellation: CancellationException) {
-                    throw cancellation
-                } catch (exception: Exception) {
-                    State.Error(exception)
+                    _conversionResult.update { State.Loaded(Unit) }
+                } else {
+                    _conversionResult.update { State.Error(RuntimeException("Failed to complete token conversion.")) }
                 }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (exception: Exception) {
+                _conversionResult.update { State.Error(exception) }
             }
         }
     }

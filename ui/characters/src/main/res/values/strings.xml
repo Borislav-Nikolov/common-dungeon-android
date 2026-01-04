@@ -8,4 +8,5 @@
     <string name="label_status_active">Active</string>
     <string name="label_status_inactive">Inactive</string>
     <string name="label_status_dead">Dead</string>
+    <string name="error_character_status_change_failed">Character status change failed.</string>
 </resources>

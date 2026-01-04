@@ -77,12 +77,15 @@ internal class PlayerRepositoryImpl @Inject constructor(
                 from = from,
                 to = to,
                 value = value
-            )
+            ).let {
+                Log.d("fkdjhfsdk", it.message)
+            }
             synchronize()
             return true
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d("fkdjhfsdk", e.toString())
             return false
         }
     }
@@ -92,10 +95,9 @@ internal class PlayerRepositoryImpl @Inject constructor(
         character: PlayerCharacter
     ): Boolean {
         try {
-            playerRemoteOperations.doTokenConversion(
-                from = from,
-                to = to,
-                value = value
+            playerRemoteOperations.changeCharacterStatus(
+                status = status,
+                character = character
             )
             synchronize()
             return true

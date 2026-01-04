@@ -25,4 +25,9 @@ interface PlayerService {
     suspend fun doTokenConversion(
         @Body data: DoTokenConversionRequestData
     ): MessageResponse
+
+    @POST("update_character_status")
+    suspend fun updateCharacterStatus(
+        @Body data: ChangeCharacterStatusRequestData
+    ): MessageResponse
 }

@@ -55,4 +55,16 @@ internal class PlayerRemoteOperationsImpl @Inject constructor(
             )
         )
     }
+
+    override suspend fun changeCharacterStatus(
+        status: CharacterStatus,
+        character: PlayerCharacter
+    ): MessageResponse {
+        return playerService.updateCharacterStatus(
+            data = ChangeCharacterStatusRequestData(
+                characterName = character.characterName,
+                newStatus = status
+            )
+        )
+    }
 }
