@@ -86,15 +86,12 @@ internal class PlayerRepositoryImpl @Inject constructor(
                 from = from,
                 to = to,
                 value = value
-            ).let {
-                Log.d("fkdjhfsdk", it.message)
-            }
+            )
             synchronize()
             return true
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (e: Exception) {
-            Log.d("fkdjhfsdk", e.toString())
+        } catch (_: Exception) {
             return false
         }
     }
