@@ -118,11 +118,13 @@ fun ExchangeTokensScreen(
                 selected = fromSelected,
                 onSelected = {
                     fromSelected = it
-                    calculateTokenConversion(
-                        fromSelected,
-                        toSelected,
-                        value.toInt()
-                    )
+                    if (value.isNotBlank()) {
+                        calculateTokenConversion(
+                            fromSelected,
+                            toSelected,
+                            value.toInt()
+                        )
+                    }
                 }
             )
             RaritySelectionRow(
@@ -134,11 +136,13 @@ fun ExchangeTokensScreen(
                 selected = toSelected,
                 onSelected = {
                     toSelected = it
-                    calculateTokenConversion(
-                        fromSelected,
-                        toSelected,
-                        value.toInt()
-                    )
+                    if (value.isNotBlank()) {
+                        calculateTokenConversion(
+                            fromSelected,
+                            toSelected,
+                            value.toInt()
+                        )
+                    }
                 }
             )
             TextField(
@@ -199,11 +203,13 @@ fun ExchangeTokensScreen(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 16.dp),
                 onClick = {
-                    doTokenConversion(
-                        fromSelected,
-                        toSelected,
-                        value.toInt()
-                    )
+                    if (value.isNotBlank()) {
+                        doTokenConversion(
+                            fromSelected,
+                            toSelected,
+                            value.toInt()
+                        )
+                    }
                 },
                 enabled = conversionState !is State.Loading && value.toIntOrNull() != null && !isConversionError
             ) {
