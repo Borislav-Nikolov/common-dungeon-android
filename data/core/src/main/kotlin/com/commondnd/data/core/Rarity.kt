@@ -50,7 +50,15 @@ object RaritySerializer : KSerializer<Rarity> {
         PrimitiveSerialDescriptor("Rarity", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Rarity) {
-        encoder.encodeString(value.name)
+        encoder.encodeString(
+            when (value) {
+                Rarity.Common -> "Common"
+                Rarity.Uncommon -> "Uncommon"
+                Rarity.Rare -> "Rare"
+                Rarity.VeryRare -> "VeryRare"
+                Rarity.Legendary -> "Legendary"
+            }
+        )
     }
 
     override fun deserialize(decoder: Decoder): Rarity =

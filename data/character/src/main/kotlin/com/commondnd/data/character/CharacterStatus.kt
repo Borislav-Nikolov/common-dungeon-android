@@ -24,7 +24,13 @@ object CharacterStatusSerializer : KSerializer<CharacterStatus> {
         PrimitiveSerialDescriptor("CharacterStatus", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: CharacterStatus) {
-        encoder.encodeString(value.name)
+        encoder.encodeString(
+            when (value) {
+                CharacterStatus.Active -> "Active"
+                CharacterStatus.Inactive -> "Inactive"
+                CharacterStatus.Dead -> "Dead"
+            }
+        )
     }
 
     override fun deserialize(decoder: Decoder): CharacterStatus =
