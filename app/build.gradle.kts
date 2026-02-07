@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.commondnd"
-        versionCode = 7
+        versionCode = 8
         versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
