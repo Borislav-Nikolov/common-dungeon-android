@@ -24,7 +24,8 @@ object InitialScreen {
 
 fun NavGraphRegistry.registerInitialScreens(
     loginController: LoginController,
-     onLoginRequest: (Uri, Uri, String) -> Unit
+    onLoginRequest: (Uri, Uri, String) -> Unit,
+    onViewPrivacyPolicy: () -> Unit
 ) {
     register(
         key = InitialScreen.Splash,
@@ -48,6 +49,7 @@ fun NavGraphRegistry.registerInitialScreens(
                 onLoginClick = {
                     navController.push(LoginScreen.Login)
                 },
+                onViewPrivacyPolicy = onViewPrivacyPolicy,
                 onAboutClick = {
                     navController.push(InitialScreen.About)
                 }

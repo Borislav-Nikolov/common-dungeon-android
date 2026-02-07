@@ -19,7 +19,7 @@ interface LoginController {
     val currentState: Flow<LoginState>
 
     fun startAuth(codeVerifier: String, redirectUri: Uri)
-    fun finishAuth(code: String?, authResult: AuthResult)
+    fun finishAuth(code: String?, authResult: AuthResult, hasAcceptedPrivacyPolicy: Boolean)
 }
 
 internal class LoginControllerImpl @Inject constructor(
@@ -37,7 +37,7 @@ internal class LoginControllerImpl @Inject constructor(
         }
     }
 
-    override fun finishAuth(code: String?, authResult: AuthResult) {
+    override fun finishAuth(code: String?, authResult: AuthResult, hasAcceptedPrivacyPolicy: Boolean) {
         require(_currentState.value is LoginState.AuthorizationRequesting) {
             "Expected auth state LoginState.AuthorizationRequesting but was ${_currentState.value::class.simpleName}"
         }
@@ -72,7 +72,8 @@ internal class LoginControllerImpl @Inject constructor(
                                 UserAuthData(
                                     code = requireNotNull(code),
                                     codeVerifier = loginStartedState.codeVerifier,
-                                    redirectUri =  loginStartedState.redirectUri.toString()
+                                    redirectUri =  loginStartedState.redirectUri.toString(),
+                                    hasAcceptedPrivacyPolicy = hasAcceptedPrivacyPolicy
                                 )
                             )
                             _currentState.update {

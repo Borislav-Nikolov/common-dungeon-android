@@ -34,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.commondnd.data.core.State
 import com.commondnd.ui.characters.registerCharactersScreens
 import com.commondnd.ui.core.NetworkState
@@ -49,8 +50,7 @@ import com.commondnd.ui.login.performCodeOauth
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.more.registerMoreScreens
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
-import com.commondnd.ui.web.getTrustedCustomTabsEnabledBrowserPackages
-import com.commondnd.ui.web.isAuthTabEnabledPackage
+import com.commondnd.ui.web.getDefaultBrowserPackage
 import com.commondnd.ui.web.openInCustomTab
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        mainViewModel.handleAuthResult(authResult)
+        mainViewModel.handleAuthResult(authResult = authResult, hasAcceptedPrivacyPolicy = true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +137,18 @@ class MainActivity : AppCompatActivity() {
                                                     redirectUri = redirectUri,
                                                     codeVerifier = codeVerifier
                                                 )
+                                            },
+                                            onViewPrivacyPolicy = {
+                                                getDefaultBrowserPackage(this@MainActivity)?.let {
+                                                    openInCustomTab(
+                                                        packageName = it,
+                                                        uri = "https://commondnd.com/privacy-policy".toUri()
+                                                    )
+                                                } ?: Toast.makeText(
+                                                    this@MainActivity,
+                                                    com.commondnd.ui.login.R.string.error_browser_not_found,
+                                                    Toast.LENGTH_SHORT
+                                                )
                                             }
                                         )
                                         registerHomeScreens()
@@ -179,7 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        mainViewModel.handleDeepLinkCallback(intent)
+        mainViewModel.handleDeepLinkCallback(intent = intent, hasAcceptedPrivacyPolicy = true)
     }
 
     companion object {

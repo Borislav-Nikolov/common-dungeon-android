@@ -54,11 +54,11 @@ fun LoginController.performCodeOauth(
             R.string.error_browser_not_found,
             Toast.LENGTH_SHORT
         ).show()
-        finishAuth(null, AuthResult.VerificationFailed)
+        finishAuth(null, AuthResult.VerificationFailed, hasAcceptedPrivacyPolicy = false)
     }
 }
 
-fun LoginController.handleAuthResult(authResult: AuthTabIntent.AuthResult) {
+fun LoginController.handleAuthResult(authResult: AuthTabIntent.AuthResult, hasAcceptedPrivacyPolicy: Boolean) {
     finishAuth(
         code = authResult.resultUri?.getQueryParameter("code"),
         authResult = when (authResult.resultCode) {
@@ -67,11 +67,12 @@ fun LoginController.handleAuthResult(authResult: AuthTabIntent.AuthResult) {
             AuthTabIntent.RESULT_VERIFICATION_FAILED -> AuthResult.VerificationFailed
             AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT -> AuthResult.Timeout
             else -> AuthResult.Unknown
-        }
+        },
+        hasAcceptedPrivacyPolicy = hasAcceptedPrivacyPolicy
     )
 }
 
-fun LoginController.handleDeepLinkCallback(intent: Intent) {
+fun LoginController.handleDeepLinkCallback(intent: Intent, hasAcceptedPrivacyPolicy: Boolean) {
     val uri = intent.data
     if (uri == null) {
         return
@@ -87,6 +88,6 @@ fun LoginController.handleDeepLinkCallback(intent: Intent) {
             else -> AuthResult.Unknown
         }
 
-        finishAuth(code = code, authResult = authResult)
+        finishAuth(code = code, authResult = authResult, hasAcceptedPrivacyPolicy = hasAcceptedPrivacyPolicy)
     }
 }
