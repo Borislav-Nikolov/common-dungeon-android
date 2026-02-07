@@ -1,6 +1,7 @@
 package com.commondnd.ui.login
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -45,7 +46,8 @@ fun NavGraphRegistry.registerLoginScreens(
                 )
             }
             when (val currentState = state) {
-                LoginState.Uninitialized -> LaunchedEffect(Unit) { startLogin() }
+                LoginState.Uninitialized -> LaunchedEffect(Unit) {
+                    startLogin() }
                 LoginState.AuthorizationCanceled -> LaunchedEffect(Unit) {
                     navController.pop()
                 }

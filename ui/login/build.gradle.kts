@@ -15,7 +15,9 @@ dependencies {
     implementation(projects.data.authorizationAndroid)
     implementation(projects.ui.core)
     implementation(projects.ui.navigation)
+    implementation(projects.ui.web)
 
+    implementation(libs.androidx.browser)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.hilt.navigation.compose)
 }

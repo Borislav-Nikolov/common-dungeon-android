@@ -11,8 +11,8 @@ android {
 
     defaultConfig {
         applicationId = "com.commondnd"
-        versionCode = 4
-        versionName = "1.0.1"
+        versionCode = 5
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,7 +33,7 @@ android {
 
 dependencies {
 
-    implementation(projects.domain)
+    implementation(projects.common)
     implementation(projects.data.core)
     implementation(projects.data.user)
     implementation(projects.ui.core)
@@ -46,6 +46,7 @@ dependencies {
     implementation(projects.ui.inventory)
     implementation(projects.ui.more)
     implementation(projects.ui.sync)
+    implementation(projects.ui.web)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.icons)

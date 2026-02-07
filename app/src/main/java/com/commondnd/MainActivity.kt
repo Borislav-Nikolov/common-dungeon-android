@@ -1,6 +1,9 @@
 package com.commondnd
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -29,22 +32,26 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.commondnd.data.core.State
 import com.commondnd.ui.characters.registerCharactersScreens
 import com.commondnd.ui.core.NetworkState
 import com.commondnd.ui.core.NoNetworkBanner
-import com.commondnd.ui.core.networkState
 import com.commondnd.ui.core.rememberNetworkState
 import com.commondnd.ui.home.registerHomeScreens
 import com.commondnd.ui.initial.registerInitialScreens
 import com.commondnd.ui.inventory.registerInventoryScreens
 import com.commondnd.ui.login.AuthResult
+import com.commondnd.ui.login.handleAuthResult
+import com.commondnd.ui.login.handleDeepLinkCallback
+import com.commondnd.ui.login.performCodeOauth
 import com.commondnd.ui.material3.CommonDungeonMaterialTheme
 import com.commondnd.ui.more.registerMoreScreens
 import com.commondnd.ui.navigation.CommonDungeonNavDisplay
+import com.commondnd.ui.web.getTrustedCustomTabsEnabledBrowserPackages
+import com.commondnd.ui.web.isAuthTabEnabledPackage
+import com.commondnd.ui.web.openInCustomTab
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,16 +72,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        mainViewModel.finishAuth(
-            code = authResult.resultUri?.getQueryParameter("code"),
-            authResult = when (authResult.resultCode) {
-                AuthTabIntent.RESULT_OK -> AuthResult.Success
-                AuthTabIntent.RESULT_CANCELED -> AuthResult.Cancelled
-                AuthTabIntent.RESULT_VERIFICATION_FAILED -> AuthResult.VerificationFailed
-                AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT -> AuthResult.Timeout
-                else -> AuthResult.Unknown
-            }
-        )
+        mainViewModel.handleAuthResult(authResult)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,14 +130,13 @@ class MainActivity : AppCompatActivity() {
                                         registerInitialScreens(
                                             loginController = mainViewModel,
                                             onLoginRequest = { uri, redirectUri, codeVerifier ->
-                                                AuthTabIntent.Builder().build().run {
-                                                    launch(
-                                                        loginLauncher,
-                                                        uri,
-                                                        redirectUri.scheme!!
-                                                    )
-                                                }
-                                                mainViewModel.startAuth(codeVerifier, redirectUri)
+                                                mainViewModel.performCodeOauth(
+                                                    context = this@MainActivity,
+                                                    authTabLauncher = loginLauncher,
+                                                    authorizationUri = uri,
+                                                    redirectUri = redirectUri,
+                                                    codeVerifier = codeVerifier
+                                                )
                                             }
                                         )
                                         registerHomeScreens()
@@ -176,8 +173,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun isDarkTheme(): Boolean {
+    private fun isDarkTheme(): Boolean {
         return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        mainViewModel.handleDeepLinkCallback(intent)
     }
 
     companion object {

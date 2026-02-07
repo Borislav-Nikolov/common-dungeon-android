@@ -38,7 +38,9 @@ internal class LoginControllerImpl @Inject constructor(
     }
 
     override fun finishAuth(code: String?, authResult: AuthResult) {
-        require(_currentState.value is LoginState.AuthorizationRequesting)
+        require(_currentState.value is LoginState.AuthorizationRequesting) {
+            "Expected auth state LoginState.AuthorizationRequesting but was ${_currentState.value::class.simpleName}"
+        }
         when (authResult) {
             AuthResult.Cancelled -> _currentState.update {
                 require(it is LoginState.AuthorizationRequesting)
